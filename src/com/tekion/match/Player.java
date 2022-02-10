@@ -6,19 +6,22 @@ public class Player {
      BOWLER,
      WICKET_KEEPER;
     };
+
     private String name;
     private Role role;
     private int runsScored;
     private int bowlsPlayed;
     private int numberOfWickets;
+    private boolean strike=true;
 
-    Player(Role role){
+    Player(Role role,String name){
         this.role=role;
+        this.name=name;
+        this.runsScored=0;
+        this.bowlsPlayed=0;
+        this.numberOfWickets=0;
     }
 
-    public void setName(String name){
-        this.name=name;
-    }
     public String getName() {
         return name;
     }
@@ -26,10 +29,11 @@ public class Player {
     public int getRunsScored(){
         return this.runsScored;
     }
-    public void addRuns(int runs){
+    public void incrementRuns(int runs){
         this.runsScored+=runs;
+
     }
-    public void addBalls() {
+    public void incrementBalls() {
         this.bowlsPlayed++;
     }
 

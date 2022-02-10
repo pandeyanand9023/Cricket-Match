@@ -6,70 +6,86 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import static com.tekion.match.Player.*;
-
-public class Team extends MatchController{
+public class Team {
     BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
     private static final int teamSize=11;
     private int score;
     private int wickets;
     private int total_balls_played;
-    private Teams name;
+    private Country name;
     private ArrayList<Player> Squad;
-    Team(Teams name)
+    private int strike=0;
+    private int non_strike=1;
+
+    Team(Country name)
     {
         this.name=name;
         Squad=new ArrayList<Player>();
     }
-    public Teams getName(){
+
+    public Country getName(){
         return this.name;
     }
     public ArrayList<Player> getSquad() {
      return Squad;
     }
-    public void addWicket() {
+
+    public void fallOfWicket(){
         this.wickets++;
+        System.out.println("Batsman Out !!");
     }
 
     public int getWickets(){
         return wickets;
     }
-    public void addRuns(int run) {
+
+    public void incrementRuns(int run,int place) {
         this.score+=run;
+        System.out.println("Runs scored on this ball" + run);
+        Squad.get(place).incrementRuns(run);
     }
 
     public int getScore(){
         return score;
     }
 
-    public void incrementBalls() {
+    public void incrementBalls(int place) {
         this.total_balls_played++;
+        Squad.get(place).incrementBalls();
     }
 
-    public int getBalls(){
+    public int getTotalBalls(){
+
         return total_balls_played;
     }
+    public void changeStrike(){
+        int temp=strike;
+        strike=non_strike;
+        non_strike=temp;
+    }
+    public int getStrike(){
+        return strike;
+    }
 
-    public void setTeams()  throws IOException{
-        System.out.println("Time to select players of " + name);
-        for (int i = 1; i <= teamSize; i++) {
+    public void setStrike(){
+        this.strike=Math.max(strike,non_strike)+1;
+    }
+
+    public void setTeams(String [] input)  throws IOException{
+
+        for(int i=0;i<input.length;i++) {
             Player P;
-            System.out.println("Enter the Player" + i + " name");
-            String name = br.readLine();
-            System.out.println("1. Batsman\n2. Bowler\n3. WicketKeeper");
-            int num=Integer.parseInt(br.readLine());
-            if(num==1)
-            {
-                P=new Player(Role.BATSMAN);
+            String str[] = input[i].split("_");
+            if (str[1].equals("1"))
+                P = new Player(Role.BATSMAN, str[0]);
+            else if (str[1].equals("2")) {
+                P = new Player(Role.BOWLER, str[1]);
+            } else {
+                P = new Player(Role.WICKET_KEEPER, str[2]);
             }
-            else if(num==2){
-                P=new Player(Role.BOWLER);
-            }
-            else {
-                P=new Player(Role.WICKET_KEEPER);
-            }
-            P.setName(name);
+
             Squad.add(P);
         }
-
     }
+
 }

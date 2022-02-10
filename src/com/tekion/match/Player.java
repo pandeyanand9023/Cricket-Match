@@ -1,33 +1,47 @@
 package com.tekion.match;
 import java.util.*;
 public class Player {
+     enum Role{
+     BATSMAN,
+     BOWLER,
+     WICKET_KEEPER;
+    };
     private String name;
+    private Role role;
+    private int runsScored;
+    private int bowlsPlayed;
+    private int numberOfWickets;
 
-    ENUM
-
+    Player(Role role){
+        this.role=role;
+    }
 
     public void setName(String name){
-     this.name=name;
-    }
-    public void setTeam(String team){
-        this.team=team;
-    }
-    public void setBatsman(){
-        this.Batsman=true;
-    }
-    public void setBowler(){
-       this.Bowler=true;
+        this.name=name;
     }
     public String getName() {
         return name;
     }
-    public String getTeam() {
-        return team;
+
+    public int getRunsScored(){
+        return this.runsScored;
     }
-    public boolean isBatsman() {
-       return Batsman;
+    public void addRuns(int runs){
+        this.runsScored+=runs;
     }
-    public boolean isBowler(){
-        return Bowler;
+    public void addBalls() {
+        this.bowlsPlayed++;
     }
+
+    public void addWicket(){
+        this.numberOfWickets++;
+    }
+    public int getBowlsPlayed(){
+        return bowlsPlayed;
+    }
+
+    public int getNumberOfWickets(){
+        return this.numberOfWickets;
+    }
+
 }

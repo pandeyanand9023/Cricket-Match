@@ -1,6 +1,6 @@
 package com.tekion.match;
 import java.util.Random;
-public enum Country {
+public enum CountryName {
     INDIA,
     SRI_LANKA ,
     PAKISTAN,
@@ -13,7 +13,7 @@ public enum Country {
     AFGHANISTAN,
     IRELAND;
 
-    public static Country getRandomTeam() {
+    public static CountryName getRandomTeam() {
         Random random = new Random();
         return values()[random.nextInt(values().length)];
     }

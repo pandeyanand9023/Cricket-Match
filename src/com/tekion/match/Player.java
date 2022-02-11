@@ -12,7 +12,8 @@ public class Player {
     private int runsScored;
     private int bowlsPlayed;
     private int numberOfWickets;
-    Player(Role role,String name){
+
+    Player(Role role, String name){
         this.role=role;
         this.name=name;
         this.runsScored=0;

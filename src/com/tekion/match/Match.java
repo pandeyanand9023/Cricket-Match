@@ -14,49 +14,58 @@ public class Match {
         this.overs=overs;
     }
 
-    public void playMatch() {
-        startInnings(team1,Integer.MAX_VALUE);
-        System.out.println("First Innings Over");
-        startInnings(team2, team1.getScore());
-
+    private void declareWinner() {
         if(team1.getScore()> team2.getScore()) {
             System.out.println(team1.getName()+" won the match !!");
-        }
-        else if(team1.getScore()< team2.getScore()) {
+        } else if(team1.getScore()< team2.getScore()) {
             System.out.println(team2.getName() + " won the match !!");
-        }
-        else {
+        } else {
             System.out.println("It's a tie!!!");
         }
     }
 
-    public void startInnings(Team team1, int target) {
+    public void playMatch() {
+        startInnings(team1, Integer.MAX_VALUE);
+        System.out.println("First Innings Over");
+        startInnings(team2, team1.getScore());
+        System.out.println("Second Innings Over");
+        declareWinner();
+    }
+
+    public void startInnings(Team battingTeam, int target) {
         int currOvers=1;
         while(currOvers<=overs) {
-
-            if(team1.getScore()>target)
+            if(battingTeam.getScore()>target) {
                 return;
-
-            startOver(team1,target);
-            team1.changeStrike();
+            }
+            startOver(battingTeam, target);
+            if(battingTeam.getWickets()==10 || currOvers==overs) {
+                break;
+            }
+            battingTeam.changeStrike();
+            currOvers++;
         }
     }
 
-    public void startOver(Team team1, int target) {
+    public void startOver(Team battingTeam, int target) {
         Random random=new Random();
-        for (int i = 1; i <= 6 && team1.getWickets() < 10; i++) {
+        for (int balls = 1; balls<= 6 && battingTeam.getWickets() < 10; balls++) {
+            if(battingTeam.getScore()>target) {
+                return;
+            }
             int outcome= random.nextInt(8);
-            team1.incrementBalls(team1.getStrike());
+            battingTeam.incrementBalls(battingTeam.getStrike());
             if (outcome== 7) {
-                team1.fallOfWicket();
-                if (team1.getWickets() == 10) {
+                battingTeam.fallOfWicket();
+                if (battingTeam.getWickets() == 10) {
                     break;
                 }
-                team1.setStrike();
+                battingTeam.setStrike();
             } else {
-                team1.incrementRuns(outcome,team1.getStrike());
-                if(outcome%2==1)
-                    team1.changeStrike();
+                battingTeam.incrementRuns(outcome,battingTeam.getStrike());
+                if(outcome%2==1) {
+                    battingTeam.changeStrike();
+                }
             }
         }
     }

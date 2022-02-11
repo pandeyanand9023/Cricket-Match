@@ -1,32 +1,28 @@
 package com.tekion.match;
-import com.tekion.match.*;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import static com.tekion.match.Player.*;
 public class Team {
-    BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
     private static final int teamSize=11;
     private int score;
     private int wickets;
     private int totalBallsPlayed;
-    private Country name;
-    private ArrayList<Player> Squad;
+    private CountryName name;
+    private ArrayList<Player> squad;
     private int strike=0;
     private int nonStrike=1;
-    Team(Country name)
-    {
+    Team(CountryName name, String[] playerDetails)throws IOException {
         this.name=name;
-        Squad=new ArrayList<Player>();
+        squad =new ArrayList<Player>();
+        setTeams(playerDetails);
     }
 
-    public Country getName(){
+    public CountryName getName(){
         return this.name;
     }
     public ArrayList<Player> getSquad() {
-     return Squad;
+     return squad;
     }
 
     public void fallOfWicket(){
@@ -38,10 +34,10 @@ public class Team {
         return wickets;
     }
 
-    public void incrementRuns(int run,int place) {
+    public void incrementRuns(int run, int place) {
         this.score+=run;
         System.out.println("Runs scored on this ball" + run);
-        Squad.get(place).incrementRuns(run);
+        squad.get(place).incrementRuns(run);
     }
 
     public int getScore(){
@@ -50,7 +46,7 @@ public class Team {
 
     public void incrementBalls(int place) {
         this.totalBallsPlayed++;
-        Squad.get(place).incrementBalls();
+        squad.get(place).incrementBalls();
     }
 
     public int getBallsPlayed(){
@@ -69,11 +65,10 @@ public class Team {
         this.strike=Math.max(strike,nonStrike)+1;
     }
 
-    public void setTeams(String [] input)  throws IOException{
-
-        for(int i=0;i<input.length;i++) {
+    public void setTeams(String [] playerDetails)  throws IOException{
+        for(int i=0;i<playerDetails.length;i++) {
             Player newPlayer;
-            String details[] = input[i].split("_");
+            String details[] = playerDetails[i].split("_");
             if (details[1].equals("1")) {
                 newPlayer = new Player(Role.BATSMAN, details[0]);
             } else if (details[1].equals("2")) {
@@ -81,8 +76,7 @@ public class Team {
             } else {
                 newPlayer = new Player(Role.WICKET_KEEPER, details[2]);
             }
-
-            Squad.add(newPlayer);
+            squad.add(newPlayer);
         }
     }
 

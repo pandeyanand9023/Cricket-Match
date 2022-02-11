@@ -9,7 +9,7 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int activeMatch = 1;
         do {
-            MatchController matchController = new MatchController();
+            MatchController matchController = new MatchController(br);
             matchController.startMatch();
             System.out.println("Want to play another match?\n1. Press 1 for Yes\n2. Press 2 for No");
             activeMatch = Integer.parseInt(br.readLine());

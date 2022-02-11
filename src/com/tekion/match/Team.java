@@ -11,12 +11,11 @@ public class Team {
     private static final int teamSize=11;
     private int score;
     private int wickets;
-    private int total_balls_played;
+    private int totalBallsPlayed;
     private Country name;
     private ArrayList<Player> Squad;
     private int strike=0;
-    private int non_strike=1;
-
+    private int nonStrike=1;
     Team(Country name)
     {
         this.name=name;
@@ -50,41 +49,40 @@ public class Team {
     }
 
     public void incrementBalls(int place) {
-        this.total_balls_played++;
+        this.totalBallsPlayed++;
         Squad.get(place).incrementBalls();
     }
 
-    public int getTotalBalls(){
-
-        return total_balls_played;
+    public int getBallsPlayed(){
+        return totalBallsPlayed;
     }
     public void changeStrike(){
         int temp=strike;
-        strike=non_strike;
-        non_strike=temp;
+        strike=nonStrike;
+        nonStrike=temp;
     }
     public int getStrike(){
         return strike;
     }
 
     public void setStrike(){
-        this.strike=Math.max(strike,non_strike)+1;
+        this.strike=Math.max(strike,nonStrike)+1;
     }
 
     public void setTeams(String [] input)  throws IOException{
 
         for(int i=0;i<input.length;i++) {
-            Player P;
-            String str[] = input[i].split("_");
-            if (str[1].equals("1"))
-                P = new Player(Role.BATSMAN, str[0]);
-            else if (str[1].equals("2")) {
-                P = new Player(Role.BOWLER, str[1]);
+            Player newPlayer;
+            String details[] = input[i].split("_");
+            if (details[1].equals("1")) {
+                newPlayer = new Player(Role.BATSMAN, details[0]);
+            } else if (details[1].equals("2")) {
+                newPlayer = new Player(Role.BOWLER, details[1]);
             } else {
-                P = new Player(Role.WICKET_KEEPER, str[2]);
+                newPlayer = new Player(Role.WICKET_KEEPER, details[2]);
             }
 
-            Squad.add(P);
+            Squad.add(newPlayer);
         }
     }
 

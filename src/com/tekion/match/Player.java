@@ -12,8 +12,6 @@ public class Player {
     private int runsScored;
     private int bowlsPlayed;
     private int numberOfWickets;
-    private boolean strike=true;
-
     Player(Role role,String name){
         this.role=role;
         this.name=name;
@@ -29,11 +27,12 @@ public class Player {
     public int getRunsScored(){
         return this.runsScored;
     }
-    public void incrementRuns(int runs){
-        this.runsScored+=runs;
 
+    public void incrementRuns(int runs) {
+        this.runsScored+=runs;
     }
-    public void incrementBalls() {
+
+     public void incrementBalls() {
         this.bowlsPlayed++;
     }
 

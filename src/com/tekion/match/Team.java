@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import static com.tekion.match.Player.*;
 public class Team {
+
     private static final int teamSize=11;
     private int score;
     private int wickets;
@@ -12,6 +13,7 @@ public class Team {
     private ArrayList<Player> squad;
     private int strike=0;
     private int nonStrike=1;
+
     Team(CountryName name, String[] playerDetails)throws IOException {
         this.name=name;
         squad =new ArrayList<Player>();
@@ -21,6 +23,7 @@ public class Team {
     public CountryName getName(){
         return this.name;
     }
+
     public ArrayList<Player> getSquad() {
      return squad;
     }
@@ -36,7 +39,7 @@ public class Team {
 
     public void incrementRuns(int run, int place) {
         this.score+=run;
-        System.out.println("Runs scored on this ball" + run);
+        System.out.println("Runs scored on this ball " + run);
         squad.get(place).incrementRuns(run);
     }
 
@@ -52,6 +55,7 @@ public class Team {
     public int getBallsPlayed(){
         return totalBallsPlayed;
     }
+
     public void changeStrike(){
         int temp=strike;
         strike=nonStrike;
@@ -70,11 +74,11 @@ public class Team {
             Player newPlayer;
             String details[] = playerDetails[i].split("_");
             if (details[1].equals("1")) {
-                newPlayer = new Player(Role.BATSMAN, details[0]);
+                newPlayer = new Player(Role.BATSMAN, details[details.length-1]);
             } else if (details[1].equals("2")) {
-                newPlayer = new Player(Role.BOWLER, details[1]);
+                newPlayer = new Player(Role.BOWLER, details[details.length-1]);
             } else {
-                newPlayer = new Player(Role.WICKET_KEEPER, details[2]);
+                newPlayer = new Player(Role.WICKET_KEEPER, details[details.length-1]);
             }
             squad.add(newPlayer);
         }

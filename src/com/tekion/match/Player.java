@@ -33,13 +33,14 @@ public class Player {
         this.runsScored+=runs;
     }
 
-     public void incrementBalls() {
+    public void incrementBalls() {
         this.bowlsPlayed++;
     }
 
     public void addWicket(){
         this.numberOfWickets++;
     }
+
     public int getBowlsPlayed(){
         return bowlsPlayed;
     }

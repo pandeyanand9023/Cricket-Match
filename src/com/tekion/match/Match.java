@@ -14,15 +14,6 @@ public class Match {
         this.overs=overs;
     }
 
-    private void declareWinner() {
-        if(team1.getScore()> team2.getScore()) {
-            System.out.println(team1.getName()+" won the match !!");
-        } else if(team1.getScore()< team2.getScore()) {
-            System.out.println(team2.getName() + " won the match !!");
-        } else {
-            System.out.println("It's a tie!!!");
-        }
-    }
 
     public void playMatch() {
         startInnings(team1, Integer.MAX_VALUE);
@@ -67,6 +58,16 @@ public class Match {
                     battingTeam.changeStrike();
                 }
             }
+        }
+    }
+    
+    private void declareWinner() {
+        if(team1.getScore()> team2.getScore()) {
+            System.out.println(team1.getName()+" won the match !!");
+        } else if(team1.getScore()< team2.getScore()) {
+            System.out.println(team2.getName() + " won the match !!");
+        } else {
+            System.out.println("It's a tie!!!");
         }
     }
 }

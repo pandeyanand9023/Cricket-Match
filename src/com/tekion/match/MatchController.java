@@ -21,24 +21,25 @@ public class MatchController extends Exception{
             teamTwo= CountryName.getRandomTeam();
         }
         System.out.println("Welcome to today's match!!\n"+teamOne+" vs "+teamTwo);
-        System.out.println("Select the number of overs ?\n10 Overs \n20 Overs \n30 Overs");
-        int overs=Integer.parseInt(br.readLine());
-        while(invalidateOvers(overs)){
-            System.out.println("Enter number of overs again");
-            overs=Integer.parseInt(br.readLine());
+        System.out.println("Select the number of overs ?\n10 Overs \n20 Overs \n50 Overs");
+        String checkOvers=br.readLine();
+        while(invalidateOvers(checkOvers)){
+            System.out.println("Enter valid number of overs (10-20-30) ");
+            checkOvers=br.readLine();
         }
+        int overs=Integer.parseInt(checkOvers);
         Team team1=new Team(teamOne,setPlayerDetails(teamOne));
         Team team2=new Team(teamTwo,setPlayerDetails(teamTwo));
         Match match=new Match(team1, team2, overs);
         return match;
     }
 
-    private boolean invalidateOvers(int overs) {
-        if(overs!=10 && overs!=20 && overs!=30) {
-            return true;
+    private boolean invalidateOvers(String checkOvers) {
+        if(checkOvers.equals("10") || checkOvers.equals("20") || checkOvers.equals("50")) {
+            return false;
         }
         else {
-            return false;
+            return true;
         }
     }
 
@@ -49,20 +50,23 @@ public class MatchController extends Exception{
             System.out.println("Enter the Player" + playerNumber + " name");
             String name = br.readLine();
             System.out.println("1. Batsman\n2. Bowler\n3. WicketKeeper");
-            int choice = Integer.parseInt(br.readLine());
-            while(!isValid(choice)){
-                choice=Integer.parseInt(br.readLine());
+            String choice = br.readLine();
+            while(notValid(choice)){
+                System.out.println("Enter numbers only from 1-3 only");
+                choice=br.readLine();
             }
-            playerDetails[playerNumber]=name+"_"+choice;
+            int role=Integer.parseInt(choice);
+            playerDetails[playerNumber-1]=name+"_"+role;
         }
         return playerDetails;
     }
 
-    private boolean isValid(int choice){
-        if(choice<=0 || choice>3) {
+    private boolean notValid(String choice){
+        if(choice.equals("1") || choice.equals("2") || choice.equals("3")) {
             return false;
+        }else {
+            return true;
         }
-        return true;
-    }
+     }
 
 }

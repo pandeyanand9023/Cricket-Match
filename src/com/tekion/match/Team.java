@@ -1,38 +1,86 @@
 package com.tekion.match;
-import com.tekion.match.*;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import static com.tekion.match.Player.*;
 public class Team {
 
-    BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+    private static final int teamSize=11;
+    private int score;
+    private int wickets;
+    private int totalBallsPlayed;
+    private CountryName name;
+    private ArrayList<Player> squad;
+    private int strike=0;
+    private int nonStrike=1;
 
-    public ArrayList<Player> setTeams(String team1)  throws IOException{
-
-        ArrayList<Player> Team1=new ArrayList<Player>();
-        System.out.println("Time to select players of " + team1);
-        for (int i = 1; i <= 11; i++) {
-            System.out.println("Enter the Player" + i + " name");
-            String name = br.readLine();
-            System.out.println("1. Batsman\n2. Bowler");
-            int x = Integer.parseInt(br.readLine());
-            if (x == 1) {
-                Batsman b = new Batsman();
-                b.setName(name);
-                b.setTeam(team1);
-                b.setBatsman();
-                Team1.add(b);
-            } else {
-                Bowler b = new Bowler();
-                b.setName(name);
-                b.setTeam(team1);
-                b.setBowler();
-                Team1.add(b);
-            }
-        }
-        return Team1;
+    Team(CountryName name, String[] playerName, String[] playerType)throws IOException {
+        this.name=name;
+        squad =new ArrayList<Player>();
+        setTeams(playerName, playerType);
     }
+
+    public CountryName getName(){
+        return this.name;
+    }
+
+    public ArrayList<Player> getSquad() {
+     return squad;
+    }
+
+    public void fallOfWicket(){
+        this.wickets++;
+        System.out.println("Batsman Out !!");
+    }
+
+    public int getWickets(){
+        return wickets;
+    }
+
+    public void incrementRuns(int run, int place) {
+        this.score+=run;
+        System.out.println("Runs scored on this ball " + run);
+        squad.get(place).incrementRuns(run);
+    }
+
+    public int getScore(){
+        return score;
+    }
+
+    public void incrementBalls(int place) {
+        this.totalBallsPlayed++;
+        squad.get(place).incrementBalls();
+    }
+
+    public int getBallsPlayed(){
+        return totalBallsPlayed;
+    }
+
+    public void changeStrike(){
+        int temp=strike;
+        strike=nonStrike;
+        nonStrike=temp;
+    }
+    public int getStrike(){
+        return strike;
+    }
+
+    public void setStrike(){
+        this.strike=Math.max(strike,nonStrike)+1;
+    }
+
+    public void setTeams(String[] playerName, String[] playerType) throws IOException{
+        for(int i=0;i<teamSize;i++) {
+            Player newPlayer;
+            if (playerType[i].equals("1")) {
+                newPlayer = new Player(Role.BATSMAN, playerName[i]);
+            } else if (playerType[i].equals("2")) {
+                newPlayer = new Player(Role.BOWLER, playerName[i]);
+            } else {
+                newPlayer = new Player(Role.WICKET_KEEPER, playerName[i]);
+            }
+            squad.add(newPlayer);
+        }
+    }
+
 }

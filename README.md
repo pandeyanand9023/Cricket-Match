@@ -12,7 +12,7 @@ MatchController will create a new Match instance with constructor with these rea
 
 Match:
 Match will have fields like team1, team2, winner, totalAvailableBalls and a strike object to manage players on strike
-when MatchController calls stimulateGame(), based on the tossWinner's decision, game will started
+when MatchController calls startMatch(), game will be started and 
 startInning() will be called and scoreToChase will be taken into consideration for the chaser team
 Inning will have total overs given during construction. method' call returns back when 1. Either all over completes 2. All out declared
 startInning() will be called for chaser team

@@ -1,7 +1,7 @@
 package com.tekion.match;
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 public class MatchController extends Exception{
     private BufferedReader br;
     Match match;
@@ -28,45 +28,56 @@ public class MatchController extends Exception{
             checkOvers=br.readLine();
         }
         int overs=Integer.parseInt(checkOvers);
-        Team team1=new Team(teamOne,setPlayerDetails(teamOne));
-        Team team2=new Team(teamTwo,setPlayerDetails(teamTwo));
-        Match match=new Match(team1, team2, overs);
+        String[] teamOnePlayerName=new String[11];
+        String[] teamOnePlayerType=new String[11];
+        setPlayerDetails(teamOne, teamOnePlayerName, teamOnePlayerType);
+        String[] teamTwoPlayerName=new String[11];
+        String[] teamTwoPlayerType=new String[11];
+        setPlayerDetails(teamTwo, teamTwoPlayerName, teamTwoPlayerType);
+        Match match=new Match(teamOne, teamOnePlayerName, teamOnePlayerType, teamTwo, teamTwoPlayerName, teamTwoPlayerType, overs);
         return match;
     }
 
     private boolean invalidateOvers(String checkOvers) {
-        if(checkOvers.equals("10") || checkOvers.equals("20") || checkOvers.equals("50")) {
+        ArrayList<String> allowedOvers=new ArrayList<>();
+        allowedOvers.add("10");
+        allowedOvers.add("20");
+        allowedOvers.add("50");
+        if(UtilClass.validateInputs(checkOvers,allowedOvers)) {
             return false;
-        }
-        else {
+        }else{
             return true;
         }
     }
 
-    private String[] setPlayerDetails(CountryName c) throws IOException{
-        String[] playerDetails=new String[11];
+
+    private void setPlayerDetails(CountryName c, String[] playerName, String[] playerType) throws IOException{
         System.out.println("Time to select players of " + c);
         for(int playerNumber=1; playerNumber<=11; playerNumber++) {
             System.out.println("Enter the Player" + playerNumber + " name");
-            String name = br.readLine();
+            playerName[playerNumber-1]=br.readLine();
             System.out.println("1. Batsman\n2. Bowler\n3. WicketKeeper");
-            String choice = br.readLine();
-            while(notValid(choice)){
+            String playerRole = br.readLine();
+            while(invalidPlayerType(playerRole)){
                 System.out.println("Enter numbers only from 1-3 only");
-                choice=br.readLine();
+                playerRole=br.readLine();
             }
-            int role=Integer.parseInt(choice);
-            playerDetails[playerNumber-1]=name+"_"+role;
+            playerType[playerNumber-1]= playerRole;
         }
-        return playerDetails;
     }
 
-    private boolean notValid(String choice){
-        if(choice.equals("1") || choice.equals("2") || choice.equals("3")) {
+    private boolean invalidPlayerType(String playerType){
+        ArrayList<String> allowedTypes=new ArrayList<>();
+        allowedTypes.add("1");
+        allowedTypes.add("2");
+        allowedTypes.add("3");
+        if(UtilClass.validateInputs(playerType,allowedTypes)) {
             return false;
         }else {
             return true;
         }
      }
+
+
 
 }

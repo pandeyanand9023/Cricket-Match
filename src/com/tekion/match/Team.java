@@ -14,10 +14,10 @@ public class Team {
     private int strike=0;
     private int nonStrike=1;
 
-    Team(CountryName name, String[] playerDetails)throws IOException {
+    Team(CountryName name, String[] playerName, String[] playerType)throws IOException {
         this.name=name;
         squad =new ArrayList<Player>();
-        setTeams(playerDetails);
+        setTeams(playerName, playerType);
     }
 
     public CountryName getName(){
@@ -69,16 +69,15 @@ public class Team {
         this.strike=Math.max(strike,nonStrike)+1;
     }
 
-    public void setTeams(String [] playerDetails)  throws IOException{
-        for(int i=0;i<playerDetails.length;i++) {
+    public void setTeams(String[] playerName, String[] playerType) throws IOException{
+        for(int i=0;i<teamSize;i++) {
             Player newPlayer;
-            String details[] = playerDetails[i].split("_");
-            if (details[1].equals("1")) {
-                newPlayer = new Player(Role.BATSMAN, details[details.length-1]);
-            } else if (details[1].equals("2")) {
-                newPlayer = new Player(Role.BOWLER, details[details.length-1]);
+            if (playerType[i].equals("1")) {
+                newPlayer = new Player(Role.BATSMAN, playerName[i]);
+            } else if (playerType[i].equals("2")) {
+                newPlayer = new Player(Role.BOWLER, playerName[i]);
             } else {
-                newPlayer = new Player(Role.WICKET_KEEPER, details[details.length-1]);
+                newPlayer = new Player(Role.WICKET_KEEPER, playerName[i]);
             }
             squad.add(newPlayer);
         }

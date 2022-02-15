@@ -1,16 +1,16 @@
 package com.tekion.match;
-import com.tekion.match.*;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Random;
 
 public class Match {
-    private Team team1;
-    private Team team2;
+    private final Team team1;
+    private final Team team2;
     private int overs;
 
-    Match(Team team1, Team team2, int overs){
-        this.team1=team1;
-        this.team2=team2;
+    Match(CountryName teamOne, String[] teamOnePlayerName, String[] teamOnePlayerType,
+          CountryName teamTwo, String[] teamTwoPlayerName, String[] teamTwoPlayerType, int overs) throws IOException {
+        team1=new Team(teamOne, teamOnePlayerName, teamOnePlayerType);
+        team2=new Team(teamTwo, teamTwoPlayerName, teamTwoPlayerType);
         this.overs=overs;
     }
 
@@ -60,7 +60,7 @@ public class Match {
             }
         }
     }
-    
+
     private void declareWinner() {
         if(team1.getScore()> team2.getScore()) {
             System.out.println(team1.getName()+" won the match !!");

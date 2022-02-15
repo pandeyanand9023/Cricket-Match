@@ -7,13 +7,13 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int active_match = 1;
+        int activeMatch = 1;
         do {
-            MatchController m = new MatchController();
-            m.startMatch();
+            MatchController matchController = new MatchController(br);
+            matchController.startMatch();
             System.out.println("Want to play another match?\n1. Press 1 for Yes\n2. Press 2 for No");
-            active_match = Integer.parseInt(br.readLine());
+            activeMatch = Integer.parseInt(br.readLine());
         }
-        while (active_match == 1);
+        while (activeMatch == 1);
     }
 }

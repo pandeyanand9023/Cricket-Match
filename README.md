@@ -10,6 +10,7 @@ MatchController
 MatchController takes necessary input from user like  numOfOvers, playerName, playerType, etc
 MatchController will create a new Match instance with constructor with these read args
 
+
 Match
 
 Match will have fields like team1, team2, winner, totalAvailableBalls and a strike object to manage players on strike
@@ -21,6 +22,7 @@ same as above, but one more condition, 3. if scoreToChase < currentInningScore, 
 during an inning, strike will be changed on odd runs or over completion
 winner will be declared based on the score of both teams
 
+
 Team
 
 Match constructor will call Team constructor to construct both the team one by one
@@ -28,12 +30,17 @@ Team will maintain numberOfWickets, totalNumberOfBallPlayed, currentWickets, lis
 on a run/wicket, appropriate team will be called to update its run/wicket and balls will be incremented by one
 each updation method will also call the method of current Strike player to update his score and balls
 
+
 Player
 
 Player will be batsman or bowler or wicketkeeper along with his name, personalscore, personalBalls, etc..
 
+
 CountryName
+
 CountryName is an enum which contains the names of the country.
 
+
 UtilClass:
+
 UtilClass contains method for validation. 

@@ -1,14 +1,15 @@
 #Cricket-Match
+
 This is an OOP based Cricket game, with the following entities.
 
 Flow of application:
 
-Main: It is the class from where the  program execution starts. It calls the MatchController from where the game starts.
+Main: It is the class from where the  program execution starts. It calls the MatchController from where the game starts.After returning from previous match it asks do you want to play another game or not.
 
 
 MatchController:
-MatchController takes necessary input from user like  numOfOvers, playerName, playerType, etc
-MatchController will create a new Match instance with constructor with these read args
+It is the class which basically controls the whole match. MatchController takes necessary input from user like  numOfOvers, playerName, playerType, etc
+MatchController will create a new Match instance with constructor with these read args.
 
 
 Match:
@@ -30,6 +31,7 @@ each updation method will also call the method of current Strike player to updat
 
 Player:
 Player will be batsman or bowler or wicketkeeper along with his name, personalscore, personalBalls, etc. The methods of this class are mainly called from Teams class's object because every Player in this game belongs to a Team. The info of player gets updated when the team's updation takes place. 
+This class contains methods of individual players.
 
 
 CountryName:
@@ -37,4 +39,4 @@ CountryName is an enum which contains the names of the country.It also contains 
 
 
 UtilClass:
-UtilClass contains method for validation. 
+It is a utility class that contains method for validation. 

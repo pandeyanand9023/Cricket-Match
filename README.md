@@ -16,8 +16,8 @@ Match is having fields like team1, team2, winner, totalAvailableBalls
 when MatchController calls startMatch(), game will be started and 
 startInning() will be called and target will be taken into consideration for the chaser team
 Innings will have total overs given during construction. method' call returns back when 1. Either all over completes 2. 10 Wickets are fallen
-3. Target is reached
-strike will be changed on odd runs or over completion
+3. Target is reached.
+The strike will be changed on odd runs or over completion and
 winner will be declared based on the score of both teams
 
 

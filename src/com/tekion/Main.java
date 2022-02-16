@@ -6,13 +6,13 @@ import java.io.InputStreamReader;
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int activeMatch = 1;
+        String activeMatch = "1";
         do {
             MatchController matchController = new MatchController(br);
             matchController.startMatch();
             System.out.println("Want to play another match?\n1. Press 1 for Yes\n2. Press 2 for No");
-            activeMatch = Integer.parseInt(br.readLine());
+            activeMatch = br.readLine();
         }
-        while (activeMatch == 1);
+        while (activeMatch.equals("1"));
     }
 }

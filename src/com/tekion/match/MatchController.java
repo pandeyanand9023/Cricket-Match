@@ -3,14 +3,14 @@ import java.util.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 public class MatchController extends Exception{
-    private BufferedReader br;
+    BufferedReader br;
     Match match;
     public MatchController(BufferedReader br) throws IOException{
         this.br=br;
         match = initializeMatch();
     }
 
-    public void startMatch(){
+    public void startMatch() throws IOException{
         match.playMatch();
     }
 
@@ -34,7 +34,7 @@ public class MatchController extends Exception{
         String[] teamTwoPlayerName=new String[11];
         String[] teamTwoPlayerType=new String[11];
         setPlayerDetails(teamTwo, teamTwoPlayerName, teamTwoPlayerType);
-        Match match=new Match(teamOne, teamOnePlayerName, teamOnePlayerType, teamTwo, teamTwoPlayerName, teamTwoPlayerType, overs);
+        Match match=new Match(teamOne, teamOnePlayerName, teamOnePlayerType, teamTwo, teamTwoPlayerName, teamTwoPlayerType, overs, br);
         return match;
     }
 
@@ -45,7 +45,7 @@ public class MatchController extends Exception{
         allowedOvers.add("50");
         if(UtilClass.validateInputs(checkOvers,allowedOvers)) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
@@ -73,11 +73,8 @@ public class MatchController extends Exception{
         allowedTypes.add("3");
         if(UtilClass.validateInputs(playerType,allowedTypes)) {
             return false;
-        }else {
+        } else {
             return true;
         }
      }
-
-
-
 }

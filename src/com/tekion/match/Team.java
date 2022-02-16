@@ -47,6 +47,10 @@ public class Team {
         return score;
     }
 
+    public int getPlayerScore(int batsmanNumber){
+        return squad.get(batsmanNumber).getRunsScored();
+    }
+
     public void incrementBalls(int place) {
         this.totalBallsPlayed++;
         squad.get(place).incrementBalls();
@@ -69,8 +73,18 @@ public class Team {
         this.strike=Math.max(strike,nonStrike)+1;
     }
 
+    public void getPlayerWiseScore(){
+        System.out.println("-------------------------------------");
+        for(int i=0; i<teamSize; i++){
+            System.out.println("Name : "+squad.get(i).getName());
+            System.out.println("Runs Scored : "+squad.get(i).getRunsScored());
+            System.out.println("Balls Played : "+squad.get(i).getBowlsPlayed());
+            System.out.println("-------------------------------------");
+        }
+    }
+
     public void setTeams(String[] playerName, String[] playerType) throws IOException{
-        for(int i=0;i<teamSize;i++) {
+        for(int i=0; i<teamSize; i++) {
             Player newPlayer;
             if (playerType[i].equals("1")) {
                 newPlayer = new Player(Role.BATSMAN, playerName[i]);

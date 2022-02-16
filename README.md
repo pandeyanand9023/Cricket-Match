@@ -11,20 +11,19 @@ MatchController will create a new Match instance with constructor with these rea
 
 
 Match:
-Match will have fields like team1, team2, winner, totalAvailableBalls and a strike object to manage players on strike
+Match will have fields like team1, team2, winner, totalAvailableBalls 
 when MatchController calls startMatch(), game will be started and 
-startInning() will be called and scoreToChase will be taken into consideration for the chaser team
-Inning will have total overs given during construction. method' call returns back when 1. Either all over completes 2. All out declared
-startInning() will be called for chaser team
-same as above, but one more condition, 3. if scoreToChase < currentInningScore, then also methods call will return
-during an inning, strike will be changed on odd runs or over completion
+startInning() will be called and target will be taken into consideration for the chaser team
+Innings will have total overs given during construction. method' call returns back when 1. Either all over completes 2. 10 Wickets are fallen
+3. Target is reached
+strike will be changed on odd runs or over completion
 winner will be declared based on the score of both teams
 
 
 Team:
 Match constructor will call Team constructor to construct both the team one by one
 Team will maintain numberOfWickets, totalNumberOfBallPlayed, currentWickets, list of players, etc
-on a run/wicket, appropriate team will be called to update its run/wicket and balls will be incremented by one
+appropriate team will be called to update its run/wicket and balls will be incremented by one
 each updation method will also call the method of current Strike player to update his score and balls
 
 

@@ -7,21 +7,27 @@ public class Player {
     };
 
     private String name;
-    private Role role;
+    private Role playerType;
     private int runsScored;
     private int bowlsPlayed;
     private int numberOfWickets;
+    private int overs;
 
-    Player(Role role, String name){
-        this.role=role;
+    Player(Role playerType, String name){
+        this.playerType=playerType;
         this.name=name;
         this.runsScored=0;
         this.bowlsPlayed=0;
         this.numberOfWickets=0;
+        this.overs=0;
     }
 
     public String getName() {
         return name;
+    }
+
+    public Role getPlayerType() {
+      return this.playerType;
     }
 
     public int getRunsScored(){
@@ -46,6 +52,10 @@ public class Player {
 
     public int getNumberOfWickets(){
         return this.numberOfWickets;
+    }
+
+    public int getOvers() {
+        return this.overs;
     }
 
 }

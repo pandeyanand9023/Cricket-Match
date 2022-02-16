@@ -38,31 +38,18 @@ public class MatchController extends Exception{
         return match;
     }
 
-    private boolean invalidateOvers(String checkOvers) {
-        ArrayList<String> allowedOvers=new ArrayList<>();
-        allowedOvers.add("10");
-        allowedOvers.add("20");
-        allowedOvers.add("50");
-        if(UtilClass.validateInputs(checkOvers,allowedOvers)) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-
     private void setPlayerDetails(CountryName c, String[] playerName, String[] playerType) throws IOException{
         System.out.println("Time to select players of " + c);
         for(int playerNumber=1; playerNumber<=11; playerNumber++) {
             System.out.println("Enter the Player" + playerNumber + " name");
             playerName[playerNumber-1]=br.readLine();
             System.out.println("1. Batsman\n2. Bowler\n3. WicketKeeper");
-            String playerRole = br.readLine();
-            while(invalidPlayerType(playerRole)){
+            String type = br.readLine();
+            while(invalidPlayerType(type)){
                 System.out.println("Enter numbers only from 1-3 only");
-                playerRole=br.readLine();
+                type=br.readLine();
             }
-            playerType[playerNumber-1]= playerRole;
+            playerType[playerNumber-1]= type;
         }
     }
 
@@ -71,10 +58,23 @@ public class MatchController extends Exception{
         allowedTypes.add("1");
         allowedTypes.add("2");
         allowedTypes.add("3");
-        if(UtilClass.validateInputs(playerType,allowedTypes)) {
+        if(MatchUtil.validateInputs(playerType, allowedTypes)) {
             return false;
         } else {
             return true;
         }
      }
+
+    private boolean invalidateOvers(String checkOvers) {
+        ArrayList<String> allowedOvers=new ArrayList<>();
+        allowedOvers.add("10");
+        allowedOvers.add("20");
+        allowedOvers.add("50");
+        if(MatchUtil.validateInputs(checkOvers, allowedOvers)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }

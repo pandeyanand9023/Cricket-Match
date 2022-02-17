@@ -10,7 +10,7 @@ public class MatchController extends Exception{
         match = initializeMatch();
     }
 
-    public void startMatch() throws IOException{
+    public void startMatch() throws IOException, InterruptedException {
         match.playMatch();
     }
 
@@ -40,30 +40,26 @@ public class MatchController extends Exception{
 
     private void setPlayerDetails(CountryName c, String[] playerName, String[] playerType) throws IOException{
         System.out.println("Time to select players of " + c);
-        for(int playerNumber=1; playerNumber<=11; playerNumber++) {
-            System.out.println("Enter the Player" + playerNumber + " name");
+        System.out.println("Enter the number of Batsman ? (Max 6)");
+        String numberOfBatsman=br.readLine();
+        while(invalidNumberOfBatsman(numberOfBatsman)){
+         System.out.println("Enter valid number of Batsman (Between 1-6)");
+         numberOfBatsman=br.readLine();
+        }
+        int playerNumber=1;
+        for( playerNumber=1; playerNumber<=Integer.parseInt(numberOfBatsman); playerNumber++) {
+            System.out.println("Enter the Player " + playerNumber + " name");
             playerName[playerNumber-1]=br.readLine();
-            System.out.println("1. Batsman\n2. Bowler\n3. WicketKeeper");
-            String type = br.readLine();
-            while(invalidPlayerType(type)){
-                System.out.println("Enter numbers only from 1-3 only");
-                type=br.readLine();
-            }
-            playerType[playerNumber-1]= type;
+            playerType[playerNumber-1]= ""+1;
+        }
+        System.out.println("Enter the names of Bowlers now");
+        while(playerNumber<=11) {
+            System.out.println("Enter the Player " + playerNumber + " name");
+            playerName[playerNumber-1]=br.readLine();
+            playerType[playerNumber-1]= ""+2;
+            playerNumber++;
         }
     }
-
-    private boolean invalidPlayerType(String playerType){
-        ArrayList<String> allowedTypes=new ArrayList<>();
-        allowedTypes.add("1");
-        allowedTypes.add("2");
-        allowedTypes.add("3");
-        if(MatchUtil.validateInputs(playerType, allowedTypes)) {
-            return false;
-        } else {
-            return true;
-        }
-     }
 
     private boolean invalidateOvers(String checkOvers) {
         ArrayList<String> allowedOvers=new ArrayList<>();
@@ -75,6 +71,14 @@ public class MatchController extends Exception{
         } else {
             return true;
         }
+    }
+
+    private boolean invalidNumberOfBatsman(String numberOfBatsman){
+        ArrayList<String> allowedNumberOfBatsman=new ArrayList<>();
+        for(int i=1; i<=6; i++){
+            allowedNumberOfBatsman.add(""+i);
+        }
+        return !(MatchUtil.validateInputs(numberOfBatsman, allowedNumberOfBatsman));
     }
 
 }

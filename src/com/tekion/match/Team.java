@@ -13,6 +13,7 @@ public class Team {
     private int wicketsTaken;
     private int totalBallsPlayed;
     private int numberOfBowlers=0;
+    private int numberOfBatsman=0;
     private CountryName name;
     private ArrayList<Player> squad;
     private int fallOfWicket[];
@@ -111,14 +112,23 @@ public class Team {
     public void changeBowler() throws IOException{
         System.out.println("Select which player will bowl the next over ?");
         for(int i=0; i<11; i++){
-            System.out.println("Press "+(i+1)+" for "+squad.get(i).getName());
+            if(squad.get(i).getOversBowled()==MatchUtil.getMaxOvers()) {
+                System.out.println("Player " + (i + 1) + " Name :  " + squad.get(i).getName() + "\nStatus: Overs Completed");
+            }
+            else if(i==getCurrentBowler()){
+                System.out.println("Player " + (i + 1) + " Name :  " + squad.get(i).getName() + "\nStatus: Bowled Previous Over");
+            }
+            else{
+                System.out.println("Player " + (i + 1) + " Name :  " + squad.get(i).getName() + "\nStatus: Available for bowling the next over");
+            }
         }
         String nextBowler=br.readLine();
-        while( (nextBowler.equals(""+currentBowler)) || invalidBowlerNumber(nextBowler)){
+        while( (nextBowler.equals((currentBowler+1)+"")) || invalidBowlerNumber(nextBowler)){
             System.out.println("Select a valid number from 1-11 except  "+(currentBowler+1));
             nextBowler= br.readLine();
         }
            currentBowler=(Integer.parseInt(nextBowler)-1);
+           squad.get(currentBowler).incrementOversBowled();
     }
 
     public int getStrike(){
@@ -127,6 +137,10 @@ public class Team {
 
     public void setStrike(){
         this.strike=Math.max(strike,nonStrike)+1;
+    }
+
+    public int getNonStrike(){
+        return nonStrike;
     }
 
     public void getPlayerWiseScore(){
@@ -144,10 +158,10 @@ public class Team {
             Player newPlayer;
             if (playerType[i].equals("1")) {
                 newPlayer = new Player(Role.BATSMAN, playerName[i]);
-            } else if (playerType[i].equals("2")) {
-                newPlayer = new Player(Role.BOWLER, playerName[i]);
+                numberOfBatsman++;
             } else {
-                newPlayer = new Player(Role.WICKET_KEEPER, playerName[i]);
+                newPlayer = new Player(Role.BOWLER, playerName[i]);
+                numberOfBowlers++;
             }
             squad.add(newPlayer);
         }
@@ -156,6 +170,8 @@ public class Team {
     private boolean invalidBowlerNumber(String bowlerNumber){
         ArrayList<String> allowedValues=new ArrayList<>();
         for(int i=1; i<=11; i++){
+            if((i==getCurrentBowler()+1) || (squad.get(i-1).getOversBowled()==MatchUtil.getMaxOvers()))
+                continue;
             allowedValues.add(""+i);
         }
         return !(MatchUtil.validateInputs(bowlerNumber, allowedValues));

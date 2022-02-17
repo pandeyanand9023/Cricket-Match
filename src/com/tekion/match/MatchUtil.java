@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.util.*;
 public class MatchUtil {
     private static final int extraBall=7;
+    private static int maxOvers=0;
     public static boolean validateInputs(String value, ArrayList<String> allowedValue){
         return allowedValue.contains(value);
     }
@@ -36,14 +37,15 @@ public class MatchUtil {
         }
     }
 
-    public static void clearConsole() {
-        try {
-            if (System.getProperty("os.name").contains("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            }
-            else {
-                System.out.print("\033\143");
-            }
-        } catch (IOException | InterruptedException ex) {}
+    public static void clearConsole() throws IOException, InterruptedException {
+        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+    }
+
+    public static void setMaxOvers(int overs){
+        maxOvers=overs/5;
+    }
+
+    public static int getMaxOvers(){
+        return maxOvers;
     }
 }

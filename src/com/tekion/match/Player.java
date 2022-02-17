@@ -54,8 +54,12 @@ public class Player {
         return this.numberOfWickets;
     }
 
-    public int getOvers() {
-        return this.overs;
+    public void incrementOversBowled() {
+        this.overs++;
+    }
+
+    public int getOversBowled(){
+        return overs;
     }
 
 }

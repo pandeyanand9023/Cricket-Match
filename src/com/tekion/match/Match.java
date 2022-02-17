@@ -15,20 +15,21 @@ public class Match {
         team1=new Team(br, teamOne, teamOnePlayerName, teamOnePlayerType);
         team2=new Team(br, teamTwo, teamTwoPlayerName, teamTwoPlayerType);
         this.overs=overs;
+        MatchUtil.setMaxOvers(overs);
         this.br=br;
         this.lastSixBalls=new ArrayDeque<>();
     }
 
-    public void playMatch() throws IOException{
+    public void playMatch() throws IOException, InterruptedException {
         startInnings(team1, team2, Integer.MAX_VALUE);
         System.out.println("First Innings Over");
         startInnings(team2, team1, team1.getScore());
         System.out.println("Second Innings Over");
-        showScoreboard(team1, team2);
+        showFinalScoreboard(team1, team2);
         declareWinner();
     }
 
-    public void startInnings(Team battingTeam, Team bowlingTeam, int target) throws IOException{
+    public void startInnings(Team battingTeam, Team bowlingTeam, int target) throws IOException, InterruptedException {
         int currOvers=1;
         while(currOvers<=overs) {
             MatchUtil.clearConsole();
@@ -53,11 +54,7 @@ public class Match {
             if(lastSixBalls.size()==7) {
                 lastSixBalls.removeFirst();
             }
-            System.out.println("Before playing the next ball, would you like to see?\n1. Your Score" +
-                    "\n2. Balls left in the over \n3. Teams Score \n4. Wickets remaining \n5. Remaining runs to win the game" +
-                    "\n6. Overs left in the innings" +
-                    "\n7. Fall of Wicket \n8. Want to see the previous six balls ?" +
-                    "\n9. Press any key to skip this and play next ball");
+            printChoices();
             userChoiceEvent(br.readLine(), battingTeam, balls, target, currOvers);
             int outcome= MatchUtil.getRandomOutcome(battingTeam.getSquad().get(battingTeam.getStrike()).getPlayerType());
             if (outcome== 7) {
@@ -127,21 +124,44 @@ public class Match {
          battingTeam.getFallOfWicket();
      } else if(userChoice.equals("8")) {
          System.out.println(lastSixBalls);
-     } else{
+     } else if(userChoice.equals("9")){
+         showScoreboard(battingTeam, balls, currOvers);
+     }else{
          System.out.println("\nIncoming next ball");
      }
     }
 
-    private void showScoreboard(Team team1, Team team2){
+    private void showFinalScoreboard(Team team1, Team team2){
         System.out.println("Scoreboard of "+team1.getName());
         team1.getPlayerWiseScore();
         System.out.println("Scoreboard of "+team2.getName());
         team2.getPlayerWiseScore();
     }
 
+    private void showScoreboard(Team battingTeam, int balls, int currOvers){
+        System.out.println("Teams Score: "+battingTeam.getScore());
+        if(balls==1) {
+            System.out.println(overs-currOvers+1+" overs remaining in this innings");
+        } else {
+            System.out.print(overs-currOvers+".");
+            System.out.println(6-balls+1+" overs remaining in this innings");
+        }
+        System.out.println("Your current score is"+" "+battingTeam.getPlayerScore(battingTeam.getStrike()));
+        System.out.println("Your partner's score is "+battingTeam.getPlayerScore(battingTeam.getNonStrike()));
+        System.out.println("Last 6 balls of the team "+lastSixBalls);
+    }
+
     private boolean isAWide(){
         Random random=new Random();
         int event=random.nextInt(10);
         return (event<=6);
+    }
+    private void printChoices(){
+        System.out.println("Before playing the next ball, would you like to see?\n1. Your Score" +
+                "\n2. Balls left in the over \n3. Teams Score \n4. Wickets remaining \n5. Remaining runs to win the game" +
+                "\n6. Overs left in the innings" +
+                "\n7. Fall of Wicket \n8. Want to see the previous six balls ?" +
+                "\n9. Show scorecard" +
+                "\n10. Press any key to skip this and play next ball");
     }
 }

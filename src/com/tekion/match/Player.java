@@ -1,33 +1,65 @@
 package com.tekion.match;
-import java.util.*;
 public class Player {
+     enum Role{
+     BATSMAN,
+     BOWLER,
+     WICKET_KEEPER;
+    };
+
     private String name;
+    private Role playerType;
+    private int runsScored;
+    private int bowlsPlayed;
+    private int numberOfWickets;
+    private int overs;
 
-    ENUM
+    Player(Role playerType, String name){
+        this.playerType=playerType;
+        this.name=name;
+        this.runsScored=0;
+        this.bowlsPlayed=0;
+        this.numberOfWickets=0;
+        this.overs=0;
+    }
 
-
-    public void setName(String name){
-     this.name=name;
-    }
-    public void setTeam(String team){
-        this.team=team;
-    }
-    public void setBatsman(){
-        this.Batsman=true;
-    }
-    public void setBowler(){
-       this.Bowler=true;
-    }
     public String getName() {
         return name;
     }
-    public String getTeam() {
-        return team;
+
+    public Role getPlayerType() {
+      return this.playerType;
     }
-    public boolean isBatsman() {
-       return Batsman;
+
+    public int getRunsScored(){
+        return this.runsScored;
     }
-    public boolean isBowler(){
-        return Bowler;
+
+    public void incrementRuns(int runs) {
+        this.runsScored+=runs;
     }
+
+    public void incrementBalls() {
+        this.bowlsPlayed++;
+    }
+
+    public void addWicket(){
+        this.numberOfWickets++;
+    }
+
+    public int getBowlsPlayed(){
+        return bowlsPlayed;
+    }
+
+    public int getNumberOfWickets(){
+        return this.numberOfWickets;
+    }
+
+    public void incrementOversBowled() {
+        this.overs++;
+    }
+
+    public int getOversBowled(){
+        return overs;
+    }
+
 }

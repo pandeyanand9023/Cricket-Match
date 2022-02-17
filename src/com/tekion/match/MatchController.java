@@ -1,113 +1,84 @@
 package com.tekion.match;
-import com.tekion.match.*;
-
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
 public class MatchController extends Exception{
-    private BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+    BufferedReader br;
+    Match match;
+    public MatchController(BufferedReader br) throws IOException{
+        this.br=br;
+        match = initializeMatch();
+    }
 
-    public void startMatch() throws IOException {
+    public void startMatch() throws IOException, InterruptedException {
+        match.playMatch();
+    }
 
-        String teams[]={"India", "Sri Lanka" , "Pakistan", "Australia", "New Zealand", "England", "RSA", "Scotland", "West Indies", "Afghanistan" ,
-                "Ireland"};
-
-        int team1=(int)(Math.random()*10);
-        int team2=(int)(Math.random()*10);
-        while(team1==team2)
-        {
-            team2=(int)(Math.random()*10);
+    public Match initializeMatch() throws IOException {
+        CountryName teamOne = CountryName.getRandomTeam();
+        CountryName teamTwo= CountryName.getRandomTeam();
+        while(teamOne.equals(teamTwo)) {
+            teamTwo= CountryName.getRandomTeam();
         }
-
-        System.out.println("Welcome to today's match!!");
-        System.out.println(teams[team1]+" vs "+teams[team2]);
-        System.out.println("Select the number of overs ?");
-        System.out.println("Press 1 : 10 Overs");
-        System.out.println("Press 2 : 20 Overs");
-        System.out.println("Press 3 : 50 Overs");
-
-        /*
-        Feedbacks
-        1. Why was it throwing IO Exception?
-        2. Create ENUM for Teams
-        3. Break method (Modularity)
-        4. Check user input for overs
-        5. Final team size and other features
-        6. A player doesn't need to have a team as its feature
-        7. Use an ENUM for the role of a player
-        8. Runs score, balls faced, bowls bowled, wickets taken,
-        9. Match should be a seperate class. (which should have runs, wickets etc)
-        10. Match Controller should only be concerned about squad etc.
-        */
-
-        int num=Integer.parseInt(br.readLine());
-
-        Team t1=new Team();
-        Team t2=new Team();
-        ArrayList<Player> Squad1=t1.setTeams(teams[team1]);
-        ArrayList<Player> Squad2=t2.setTeams(teams[team2]);
-        ScoreBoard innings1=new ScoreBoard();
-        int j=0;
-        for(int i=1;i<=num*6 && j<11;i++)
-        {
-            int val1=(int)(Math.random()*6);
-            int val2=(int)(Math.random()*6);
-            if(val1==val2)
-            {
-                innings1.addWicket();
-                System.out.println("Batsman Out !!");
-                j++;
-                if(j==11)
-                    break;
-                System.out.println("Next Batsman "+Squad1.get(j).getName());
-            }
-            else
-            {
-                innings1.setRuns(val1);
-                System.out.println("Runs scored on this ball"+val1);
-            }
-            innings1.setBalls();
+        System.out.println("Welcome to today's match!!\n"+teamOne+" vs "+teamTwo);
+        System.out.println("Select the number of overs ?\n10 Overs \n20 Overs \n50 Overs");
+        String checkOvers=br.readLine();
+        while(invalidateOvers(checkOvers)){
+            System.out.println("Enter valid number of overs (10-20-30) ");
+            checkOvers=br.readLine();
         }
-        if(j!=11)
-        {
-            System.out.println("Innings Over!!");
-        }
-        j=0;
-        ScoreBoard innings2=new ScoreBoard();
+        int overs=Integer.parseInt(checkOvers);
+        String[] teamOnePlayerName=new String[11];
+        String[] teamOnePlayerType=new String[11];
+        setPlayerDetails(teamOne, teamOnePlayerName, teamOnePlayerType);
+        String[] teamTwoPlayerName=new String[11];
+        String[] teamTwoPlayerType=new String[11];
+        setPlayerDetails(teamTwo, teamTwoPlayerName, teamTwoPlayerType);
+        Match match=new Match(teamOne, teamOnePlayerName, teamOnePlayerType, teamTwo, teamTwoPlayerName, teamTwoPlayerType, overs, br);
+        return match;
+    }
 
-        for(int i=1;i<=num*6 && j<11;i++)
-        {
-            int val1=(int)(Math.random()*6);
-            int val2=(int)(Math.random()*6);
-            if(innings2.getRuns()>innings1.getRuns())
-            {
-                System.out.println(teams[team2]+" won the match !!");
-                break;
-            }
-            if(val1==val2)
-            {
-                innings2.addWicket();
-                System.out.println("Batsman Out !!");
-                j++;
-                if(j==11)
-                    break;
-                System.out.println("Next Batsman "+Squad2.get(j).getName());
-            }
-            else
-            {
-                innings1.setRuns(val1);
-                System.out.println("Runs scored on this ball"+val1);
-            }
-            innings2.setBalls();
+    private void setPlayerDetails(CountryName c, String[] playerName, String[] playerType) throws IOException{
+        System.out.println("Time to select players of " + c);
+        System.out.println("Enter the number of Batsman ? (Max 6)");
+        String numberOfBatsman=br.readLine();
+        while(invalidNumberOfBatsman(numberOfBatsman)){
+         System.out.println("Enter valid number of Batsman (Between 1-6)");
+         numberOfBatsman=br.readLine();
         }
-
-        if(innings1.getRuns()>innings2.getRuns())
-        {
-            System.out.println(teams[team2]+" won the match !!");
+        int playerNumber=1;
+        for( playerNumber=1; playerNumber<=Integer.parseInt(numberOfBatsman); playerNumber++) {
+            System.out.println("Enter the Player " + playerNumber + " name");
+            playerName[playerNumber-1]=br.readLine();
+            playerType[playerNumber-1]= ""+1;
         }
+        System.out.println("Enter the names of Bowlers now");
+        while(playerNumber<=11) {
+            System.out.println("Enter the Player " + playerNumber + " name");
+            playerName[playerNumber-1]=br.readLine();
+            playerType[playerNumber-1]= ""+2;
+            playerNumber++;
+        }
+    }
 
+    private boolean invalidateOvers(String checkOvers) {
+        ArrayList<String> allowedOvers=new ArrayList<>();
+        allowedOvers.add("10");
+        allowedOvers.add("20");
+        allowedOvers.add("50");
+        if(MatchUtil.validateInputs(checkOvers, allowedOvers)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean invalidNumberOfBatsman(String numberOfBatsman){
+        ArrayList<String> allowedNumberOfBatsman=new ArrayList<>();
+        for(int i=1; i<=6; i++){
+            allowedNumberOfBatsman.add(""+i);
+        }
+        return !(MatchUtil.validateInputs(numberOfBatsman, allowedNumberOfBatsman));
     }
 
 }

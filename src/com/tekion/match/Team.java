@@ -10,47 +10,59 @@ public class Team {
     private static final int teamSize=11;
     private int score;
     private int wicketsFallen;
-    private int wicketsTaken;
-    private int totalBallsPlayed;
-    private int numberOfBowlers=0;
-    private int numberOfBatsman=0;
     private CountryName name;
     private ArrayList<Player> squad;
-    private int fallOfWicket[];
+    private int scoresAtFallOfWicket[];
+    private int maxOversAllowed;
     private int strike=0;
     private int nonStrike=1;
     private int currentBowler=10;
 
-    Team(BufferedReader br, CountryName name, String[] playerName, String[] playerType)throws IOException {
+    Team(BufferedReader br, CountryName name, String[] playerName, String[] playerType, String[] bowlerType,  int overs)throws IOException {
         this.br=br;
         this.name=name;
-        fallOfWicket=new int[10];
-        Arrays.fill(fallOfWicket,-1);
+        scoresAtFallOfWicket =new int[10];
+        Arrays.fill(scoresAtFallOfWicket,-1);
         squad =new ArrayList<Player>();
-        setTeams(playerName, playerType);
+        maxOversAllowed =overs/5;
+        setTeams(playerName, playerType, bowlerType);
     }
 
-    public void getFallOfWicket(){
-        if(fallOfWicket[0]==-1) {
+    public void getScoresAtFallOfWicket(){
+        if(scoresAtFallOfWicket[0]==-1) {
             System.out.println("No wicket has fallen till now");
             return;
         }
-        for(int i=0; i<10 && fallOfWicket[i]!=-1; i++){
-            System.out.println("Wicket number "+i+" fell on "+fallOfWicket[i]);
+        for(int i = 0; i<10 && scoresAtFallOfWicket[i]!=-1; i++){
+            System.out.println("Wicket number "+i+" fell on "+ scoresAtFallOfWicket[i]);
         }
     }
 
-    public void setFallOfWicket(int place){
-        fallOfWicket[place-1]=score;
+    public void topPerformers(){
+        int maxScore=0;
+        int maxWicket=0;
+        int highestScorer=0;
+        int highestWicketTaker=0;
+        for(int i=0;i<11;i++){
+            if(squad.get(i).getRunsScored()>maxScore){
+                maxScore=squad.get(i).getRunsScored();
+                highestScorer=i;
+            }
+            if(squad.get(i).getNumberOfWickets()>maxWicket){
+                maxWicket=squad.get(i).getNumberOfWickets();
+                highestWicketTaker=i;
+            }
+        }
+        System.out.println("Highest Scorer: "+squad.get(highestScorer).getName());
+        System.out.println("Highest Scorer: "+squad.get(highestWicketTaker).getName());
+    }
+
+    public void setScoresAtFallOfWicket(int place){
+        scoresAtFallOfWicket[place-1]=score;
     }
 
     public void wicketsTaken(int currentBowler){
-        this.wicketsTaken++;
         squad.get(currentBowler).addWicket();
-    }
-
-    public int getWicketsTaken(){
-        return this.wicketsTaken;
     }
 
     public CountryName getName(){
@@ -63,7 +75,8 @@ public class Team {
 
     public void fallOfWicket(){
         this.wicketsFallen++;
-        setFallOfWicket(wicketsFallen);
+        squad.get(strike).setBatsmanOut();
+        setScoresAtFallOfWicket(wicketsFallen);
         System.out.println("Batsman Out !!");
     }
 
@@ -90,13 +103,8 @@ public class Team {
         return squad.get(batsmanNumber).getRunsScored();
     }
 
-    public void incrementBalls(int place) {
-        this.totalBallsPlayed++;
-        squad.get(place).incrementBalls();
-    }
-
-    public int getBallsPlayed(){
-        return totalBallsPlayed;
+    public void incrementBallsPlayed(int place) {
+        squad.get(place).incrementBallsPlayed();
     }
 
     public void changeStrike(){
@@ -105,32 +113,41 @@ public class Team {
         nonStrike=temp;
     }
 
+    public int getMaxOversAllowed(){
+        return maxOversAllowed;
+    }
+
     public int getCurrentBowler(){
         return currentBowler;
     }
 
     public void changeBowler() throws IOException{
+        ArrayList<String> allowedBowlerChoices=new ArrayList<>();
         System.out.println("Select which player will bowl the next over ?");
         for(int i=0; i<11; i++){
-            if(squad.get(i).getOversBowled()==MatchUtil.getMaxOvers()) {
-                System.out.println("Player " + (i + 1) + " Name :  " + squad.get(i).getName() + "\nStatus: Overs Completed");
-            }
-            else if(i==getCurrentBowler()){
-                System.out.println("Player " + (i + 1) + " Name :  " + squad.get(i).getName() + "\nStatus: Bowled Previous Over");
-            }
-            else{
-                System.out.println("Player " + (i + 1) + " Name :  " + squad.get(i).getName() + "\nStatus: Available for bowling the next over");
+            if(squad.get(i).getOversBowled()==getMaxOversAllowed() || i==getCurrentBowler()) {
+                continue;
+            } else {
+                System.out.println("Enter " + (i + 1) + " for Name :  " + squad.get(i).getName());
+                allowedBowlerChoices.add(i+1+"");
             }
         }
         String nextBowler=br.readLine();
-        while( (nextBowler.equals((currentBowler+1)+"")) || invalidBowlerNumber(nextBowler)){
-            System.out.println("Select a valid number from 1-11 except  "+(currentBowler+1));
+        while(invalidBowlerNumber(nextBowler, allowedBowlerChoices)){
+            System.out.println("Select a valid choice from the above list");
             nextBowler= br.readLine();
         }
            currentBowler=(Integer.parseInt(nextBowler)-1);
-           squad.get(currentBowler).incrementOversBowled();
     }
-
+    private Player.BowlerType  setBowlerType(String bowlerType){
+        if(bowlerType.equals("1")){
+            return BowlerType.FAST;
+        } else if(bowlerType.equals("2")){
+            return BowlerType.MEDIUM_FAST;
+        } else{
+            return BowlerType.SPIN;
+        }
+    }
     public int getStrike(){
         return strike;
     }
@@ -149,31 +166,44 @@ public class Team {
             System.out.println("Name : "+squad.get(i).getName());
             System.out.println("Runs Scored : "+squad.get(i).getRunsScored());
             System.out.println("Balls Played : "+squad.get(i).getBowlsPlayed());
+            System.out.print("Overs Bowled: "+squad.get(i).getOversBowled());
+            if(squad.get(i).getOversBowled()!=0) {
+                System.out.println("."+squad.get(i).getOversBowled());
+            } else {
+                System.out.println();
+            }
+            System.out.println("Wickets Taken: "+squad.get(i).getNumberOfWickets());
             System.out.println("-------------------------------------");
         }
     }
 
-    public void setTeams(String[] playerName, String[] playerType) throws IOException{
+    @Override
+    public String toString() {
+        return "Team{" +
+                ", score=" + score +
+                ", wicketsFallen=" + wicketsFallen +
+                ", name=" + name +
+                ", maxOversAllowed=" + maxOversAllowed +
+                ", strike=" + strike +
+                ", nonStrike=" + nonStrike +
+                '}';
+    }
+
+    public void setTeams(String[] playerName, String[] playerType, String[] bowlerType) throws IOException{
         for(int i=0; i<teamSize; i++) {
             Player newPlayer;
             if (playerType[i].equals("1")) {
-                newPlayer = new Player(Role.BATSMAN, playerName[i]);
-                numberOfBatsman++;
+                newPlayer = new Player(Role.BATSMAN, playerName[i], setBowlerType(bowlerType[i]));
+            } else if(playerType[i].equals("2")) {
+                newPlayer = new Player(Role.BOWLER, playerName[i], setBowlerType(bowlerType[i]));
             } else {
-                newPlayer = new Player(Role.BOWLER, playerName[i]);
-                numberOfBowlers++;
+                newPlayer =new Player(Role.ALL_ROUNDER, playerName[i], setBowlerType(bowlerType[i]));
             }
             squad.add(newPlayer);
         }
     }
 
-    private boolean invalidBowlerNumber(String bowlerNumber){
-        ArrayList<String> allowedValues=new ArrayList<>();
-        for(int i=1; i<=11; i++){
-            if((i==getCurrentBowler()+1) || (squad.get(i-1).getOversBowled()==MatchUtil.getMaxOvers()))
-                continue;
-            allowedValues.add(""+i);
-        }
+    private boolean invalidBowlerNumber(String bowlerNumber, ArrayList<String> allowedValues){
         return !(MatchUtil.validateInputs(bowlerNumber, allowedValues));
     }
 

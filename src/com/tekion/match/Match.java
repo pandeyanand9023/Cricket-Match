@@ -10,22 +10,32 @@ public class Match {
     private int overs;
     private BufferedReader br;
     private ArrayDeque<String> lastSixBalls;
-    Match(CountryName teamOne, String[] teamOnePlayerName, String[] teamOnePlayerType,
-          CountryName teamTwo, String[] teamTwoPlayerName, String[] teamTwoPlayerType, int overs,BufferedReader br) throws IOException {
-        team1=new Team(br, teamOne, teamOnePlayerName, teamOnePlayerType);
-        team2=new Team(br, teamTwo, teamTwoPlayerName, teamTwoPlayerType);
+    Match(CountryName teamOne, String[] teamOnePlayerName, String[] teamOnePlayerType, String[] teamOneBowlerType,
+          CountryName teamTwo, String[] teamTwoPlayerName, String[] teamTwoPlayerType,String[] teamTwoBowlerType,
+          int overs,BufferedReader br) throws IOException {
+        team1=new Team(br, teamOne, teamOnePlayerName, teamOnePlayerType, teamOneBowlerType, overs);
+        team2=new Team(br, teamTwo, teamTwoPlayerName, teamTwoPlayerType, teamTwoBowlerType, overs);
         this.overs=overs;
-        MatchUtil.setMaxOvers(overs);
         this.br=br;
         this.lastSixBalls=new ArrayDeque<>();
     }
 
     public void playMatch() throws IOException, InterruptedException {
-        startInnings(team1, team2, Integer.MAX_VALUE);
-        System.out.println("First Innings Over");
-        startInnings(team2, team1, team1.getScore());
-        System.out.println("Second Innings Over");
+        int tossOutcome=MatchUtil.simulateToss(team1, team2);
+        if(tossOutcome==0) {
+            startInnings(team1, team2, Integer.MAX_VALUE);
+            System.out.println("First Innings Over");
+            startInnings(team2, team1, team1.getScore());
+            System.out.println("Second Innings Over");
+        } else{
+            startInnings(team2, team1, Integer.MAX_VALUE);
+            System.out.println("First Innings Over");
+            startInnings(team1, team2, team2.getScore());
+            System.out.println("Second Innings Over");
+        }
         showFinalScoreboard(team1, team2);
+        team1.topPerformers();
+        team2.topPerformers();
         declareWinner();
     }
 
@@ -55,18 +65,14 @@ public class Match {
                 lastSixBalls.removeFirst();
             }
             printChoices();
-            userChoiceEvent(br.readLine(), battingTeam, balls, target, currOvers);
-            int outcome= MatchUtil.getRandomOutcome(battingTeam.getSquad().get(battingTeam.getStrike()).getPlayerType());
-            if (outcome== 7) {
-                lastSixBalls.addLast("W");
-                battingTeam.incrementBalls(battingTeam.getStrike());
-                battingTeam.fallOfWicket();
-                bowlingTeam.wicketsTaken(bowlingTeam.getCurrentBowler());
+            userChoiceEvent(br.readLine(), battingTeam, balls, currOvers);
+            int outcomeOfTheBall= MatchUtil.getRandomOutcome(battingTeam.getSquad().get(battingTeam.getStrike()).getPlayerType());
+            if (outcomeOfTheBall== 7) {
+                fallingOfWicket(battingTeam, bowlingTeam);
                 if (battingTeam.getWicketsFallen() == 10) {
                     break;
                 }
-                battingTeam.setStrike();
-            } else if(outcome==8){
+            } else if(outcomeOfTheBall==8){
                 if(isAWide()){
                     System.out.println("It's a wide ball");
                     lastSixBalls.add("Wd");
@@ -77,14 +83,28 @@ public class Match {
                 balls--;
                 battingTeam.incrementRuns();
             } else {
-                lastSixBalls.add(""+outcome);
-                battingTeam.incrementBalls(battingTeam.getStrike());
-                battingTeam.incrementRuns(outcome,battingTeam.getStrike());
-                if(outcome%2==1) {
-                    battingTeam.changeStrike();
-                }
+                scoringOfRuns(battingTeam, bowlingTeam, outcomeOfTheBall);
             }
         }
+    }
+
+    private void scoringOfRuns(Team battingTeam, Team bowlingTeam, int outcomeOfTheBall) {
+        lastSixBalls.add(""+ outcomeOfTheBall);
+        battingTeam.incrementBallsPlayed(battingTeam.getStrike());
+        battingTeam.incrementRuns(outcomeOfTheBall, battingTeam.getStrike());
+        bowlingTeam.getSquad().get(bowlingTeam.getCurrentBowler()).incrementBallsBowled();
+        if(outcomeOfTheBall %2==1) {
+            battingTeam.changeStrike();
+        }
+    }
+
+    private void fallingOfWicket(Team battingTeam, Team bowlingTeam) {
+        lastSixBalls.addLast("W");
+        battingTeam.incrementBallsPlayed(battingTeam.getStrike());
+        battingTeam.fallOfWicket();
+        bowlingTeam.wicketsTaken(bowlingTeam.getCurrentBowler());
+        bowlingTeam.getSquad().get(bowlingTeam.getCurrentBowler()).incrementBallsBowled();
+        battingTeam.setStrike();
     }
 
     private void declareWinner() {
@@ -97,38 +117,32 @@ public class Match {
         }
     }
 
-    private void userChoiceEvent(String userChoice, Team battingTeam, int balls, int target, int currOvers){
-     if(userChoice.equals("1")) {
-         System.out.println("Your current score is"+" "+battingTeam.getPlayerScore(battingTeam.getStrike()));
-     } else if(userChoice.equals("2")) {
-         System.out.println(7-balls+" Balls are remaining in this over: ");
-     } else if(userChoice.equals("3")) {
-         System.out.println("Team Score: "+battingTeam.getScore());
-     } else if(userChoice.equals("4")) {
-         System.out.println(10-battingTeam.getWicketsFallen()+" Wickets are remaining ");
-     } else if(userChoice.equals("5")) {
-         if(target==Integer.MAX_VALUE) {
-             System.out.println("You are batting first, there is no target to be chased.");
-         } else {
-             System.out.print("Remaining runs: ");
-             System.out.println(target-battingTeam.getScore());
-         }
-     } else if(userChoice.equals("6")) {
-         if(balls==1) {
-             System.out.println(overs-currOvers+1+" overs remaining in this innings");
-         } else {
-             System.out.print(overs-currOvers+".");
-             System.out.println(6-balls+1+" overs remaining in this innings");
-         }
-     } else if(userChoice.equals("7")) {
-         battingTeam.getFallOfWicket();
-     } else if(userChoice.equals("8")) {
-         System.out.println(lastSixBalls);
-     } else if(userChoice.equals("9")){
-         showScoreboard(battingTeam, balls, currOvers);
-     }else{
-         System.out.println("\nIncoming next ball");
-     }
+    private void userChoiceEvent(String userChoice, Team battingTeam, int balls, int currOvers){
+     switch(userChoice){
+         case "1": System.out.println("Your current score is"+" "+battingTeam.getPlayerScore(battingTeam.getStrike()));
+                   break;
+         case "2": System.out.println(7-balls+" Balls are remaining in this over: ");
+                   break;
+         case "3": System.out.println("Team Score: "+battingTeam.getScore());
+                   break;
+         case "4": System.out.println(10-battingTeam.getWicketsFallen()+" Wickets are remaining ");
+                   break;
+         case "5": if(balls==1) {
+                         System.out.println(overs-currOvers+1+" overs remaining in this innings");
+                   } else {
+                         System.out.print(overs-currOvers+".");
+                         System.out.println(6-balls+1+" overs remaining in this innings");
+                   }
+                   break;
+         case "6": battingTeam.getScoresAtFallOfWicket();
+                   break;
+         case "7": System.out.println(lastSixBalls);
+                   break;
+         case "8": showScoreboard(battingTeam, balls, currOvers);
+                   break;
+         default:  System.out.println("\nIncoming next ball");
+                   break;
+      }
     }
 
     private void showFinalScoreboard(Team team1, Team team2){
@@ -139,16 +153,7 @@ public class Match {
     }
 
     private void showScoreboard(Team battingTeam, int balls, int currOvers){
-        System.out.println("Teams Score: "+battingTeam.getScore());
-        if(balls==1) {
-            System.out.println(overs-currOvers+1+" overs remaining in this innings");
-        } else {
-            System.out.print(overs-currOvers+".");
-            System.out.println(6-balls+1+" overs remaining in this innings");
-        }
-        System.out.println("Your current score is"+" "+battingTeam.getPlayerScore(battingTeam.getStrike()));
-        System.out.println("Your partner's score is "+battingTeam.getPlayerScore(battingTeam.getNonStrike()));
-        System.out.println("Last 6 balls of the team "+lastSixBalls);
+        System.out.println(battingTeam.toString());
     }
 
     private boolean isAWide(){
@@ -156,12 +161,17 @@ public class Match {
         int event=random.nextInt(10);
         return (event<=6);
     }
+
     private void printChoices(){
-        System.out.println("Before playing the next ball, would you like to see?\n1. Your Score" +
-                "\n2. Balls left in the over \n3. Teams Score \n4. Wickets remaining \n5. Remaining runs to win the game" +
-                "\n6. Overs left in the innings" +
-                "\n7. Fall of Wicket \n8. Want to see the previous six balls ?" +
-                "\n9. Show scorecard" +
-                "\n10. Press any key to skip this and play next ball");
+        System.out.println("Before playing the next ball, would you like to see?" +
+                "\n1. Your Score" +
+                "\n2. Balls left in the over " +
+                "\n3. Teams Score " +
+                "\n4. Wickets remaining " +
+                "\n5. Overs left in the innings" +
+                "\n6. Fall of Wicket " +
+                "\n7. Want to see the previous six balls ?" +
+                "\n8. Show scorecard" +
+                "\n9. Press any key to skip this and play next ball");
     }
 }

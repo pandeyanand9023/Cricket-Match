@@ -16,3 +16,20 @@ public class Main {
         while (activeMatch.equals("1"));
     }
 }
+
+/*
+
+Minutes of the meeting (Monday):
+1. setPlayerDetails: Pass info to a void method and then setDetails there (Refactor) (Done)
+2. Put remainingRuns inside printChoices use and If there (Use loop or something to avoid numbering disturbance) (Done)
+3. Optimize the changeBowler (Make changeBowler pick in constant time and keep updating the list after each over)(Done)
+4. Toss should be done inside MatchController // No teams should be mentioned inside matchController
+5. Think of the condition about overs exhausted and make effective changes
+
+
+DataBase:
+1. Decide tables
+2. Models
+3. Relationship
+
+ */

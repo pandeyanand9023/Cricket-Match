@@ -3,6 +3,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.*;
 
 import static com.tekion.match.Player.*;
 public class Team {
@@ -12,6 +14,8 @@ public class Team {
     private int wicketsFallen;
     private CountryName name;
     private ArrayList<Player> squad;
+    private int previousBowler;
+    private HashMap<Integer, String> availableBowlers;
     private int scoresAtFallOfWicket[];
     private int maxOversAllowed;
     private int strike=0;
@@ -25,6 +29,9 @@ public class Team {
         Arrays.fill(scoresAtFallOfWicket,-1);
         squad =new ArrayList<Player>();
         maxOversAllowed =overs/5;
+        availableBowlers=new HashMap<>();
+        setAvailableBowlers();
+        previousBowler=-1;
         setTeams(playerName, playerType, bowlerType);
     }
 
@@ -122,22 +129,17 @@ public class Team {
     }
 
     public void changeBowler() throws IOException{
-        ArrayList<String> allowedBowlerChoices=new ArrayList<>();
-        System.out.println("Select which player will bowl the next over ?");
-        for(int i=0; i<11; i++){
-            if(squad.get(i).getOversBowled()==getMaxOversAllowed() || i==getCurrentBowler()) {
-                continue;
-            } else {
-                System.out.println("Enter " + (i + 1) + " for Name :  " + squad.get(i).getName());
-                allowedBowlerChoices.add(i+1+"");
-            }
+        if(availableBowlers.size()==2 && exhaustOvers()) {
+            System.out.println("Choose bowlers wisely ");
         }
+        System.out.println("Select which player will bowl the next over ?");
+        System.out.println(availableBowlers);
         String nextBowler=br.readLine();
-        while(invalidBowlerNumber(nextBowler, allowedBowlerChoices)){
+        while(invalidBowlerNumber(nextBowler)){
             System.out.println("Select a valid choice from the above list");
             nextBowler= br.readLine();
         }
-           currentBowler=(Integer.parseInt(nextBowler)-1);
+           currentBowler=Integer.parseInt(nextBowler);
     }
     private Player.BowlerType  setBowlerType(String bowlerType){
         if(bowlerType.equals("1")){
@@ -148,6 +150,8 @@ public class Team {
             return BowlerType.SPIN;
         }
     }
+
+
     public int getStrike(){
         return strike;
     }
@@ -189,6 +193,14 @@ public class Team {
                 '}';
     }
 
+    public void maintainsAvailableBowlers() throws IOException{
+        availableBowlers.remove(currentBowler);
+        if(previousBowler!=-1 && squad.get(previousBowler).getOversBowled()<maxOversAllowed){
+            availableBowlers.put(previousBowler, squad.get(previousBowler).getName());
+        }
+        changeBowler();
+    }
+
     public void setTeams(String[] playerName, String[] playerType, String[] bowlerType) throws IOException{
         for(int i=0; i<teamSize; i++) {
             Player newPlayer;
@@ -202,9 +214,34 @@ public class Team {
             squad.add(newPlayer);
         }
     }
+    private boolean exhaustOvers(){
+         boolean moreThanOneOvers=false;
+         boolean onlyOneOver=false;
+         for(Integer playerNumber: availableBowlers.keySet()){
+             if(squad.get(playerNumber).getOversBowled()==1){
+                 onlyOneOver=true;
+             } else {
+                 moreThanOneOvers=true;
+             }
+         }
+         return (onlyOneOver && moreThanOneOvers);
+    }
 
-    private boolean invalidBowlerNumber(String bowlerNumber, ArrayList<String> allowedValues){
+    private void setAvailableBowlers(){
+        for(int i=0; i<11; i++){
+            if(squad.get(i).getOversBowled()<maxOversAllowed){
+                availableBowlers.put(i, squad.get(i).getName());
+            }
+        }
+    }
+
+    private boolean invalidBowlerNumber(String bowlerNumber){
+        ArrayList<String> allowedValues=new ArrayList<>();
+        for(Integer playerNumber: availableBowlers.keySet()){
+            allowedValues.add(""+playerNumber);
+        }
         return !(MatchUtil.validateInputs(bowlerNumber, allowedValues));
     }
+
 
 }

@@ -44,12 +44,17 @@ public class MatchController extends Exception{
 
     private void setPlayerDetails(CountryName countryName, String[] playerName, String[] playerType, String[] bowlerType) throws IOException{
         System.out.println("Time to select players of " + countryName);
-        int playerNumber=1;
+        setBatsmanDetails(getPlayerNumber(playerType), playerName, playerType, bowlerType);
+        setAllRounderDetails(getPlayerNumber(playerType), playerName, playerType, bowlerType);
+        setBowlerDetails(getPlayerNumber(playerType), playerName, playerType, bowlerType);
+    }
+
+    private void setBatsmanDetails(int playerNumber, String[] playerName, String[] playerType, String[] bowlerType) throws IOException{
         System.out.println("Enter the number of Batsman ? (Max 6)");
         String numberOfBatsman=br.readLine();
         while(invalidNumberOfBatsman(numberOfBatsman)){
-         System.out.println("Enter valid number of Batsman (Between 1-6)");
-         numberOfBatsman=br.readLine();
+            System.out.println("Enter valid number of Batsman (Between 1-6)");
+            numberOfBatsman=br.readLine();
         }
         for( playerNumber=1; playerNumber<=Integer.parseInt(numberOfBatsman); playerNumber++) {
             System.out.println("Enter the Player " + playerNumber + " name");
@@ -63,40 +68,57 @@ public class MatchController extends Exception{
             bowlerType[playerNumber-1]=bowlerTypeChoice;
             playerType[playerNumber-1]= ""+1;
         }
+    }
 
+    private void setAllRounderDetails(int playerNumber, String[] playerName, String[] playerType, String[] bowlerType) throws IOException{
         System.out.println("Enter the number of All-rounders ? (Max 2)");
         String numberOfAllRounders=br.readLine();
         while(invalidNumberOfAllrounders(numberOfAllRounders)){
             System.out.println("Enter valid number of All-rounders");
             numberOfAllRounders=br.readLine();
         }
-        while(playerNumber<Integer.parseInt(numberOfBatsman)+Integer.parseInt(numberOfAllRounders)){
-            System.out.println("Enter the Player " + playerNumber + " name");
-            playerName[playerNumber-1]=br.readLine();
+        int numberOfAllrounder=0;
+        while(numberOfAllrounder<Integer.parseInt(numberOfAllRounders)){
+            System.out.println("Enter the Player " + (playerNumber+1) + " name");
+            playerName[playerNumber]=br.readLine();
             System.out.println("Enter the type of Bowler the player is :\n1. Fast \n2. Medium Fast \n3. Spin");
             String bowlerTypeChoice=br.readLine();
             while(invalidBowlerType(bowlerTypeChoice)){
                 System.out.println("Enter a valid number :\n1. Fast \n2. Medium Fast \n3. Spin");
                 bowlerTypeChoice=br.readLine();
             }
-            bowlerType[playerNumber-1]=bowlerTypeChoice;
-            playerType[playerNumber-1]= ""+3;
+            bowlerType[playerNumber]=bowlerTypeChoice;
+            playerType[playerNumber]= ""+3;
             playerNumber++;
+            numberOfAllrounder++;
         }
+    }
+
+    private void setBowlerDetails(int playerNumber, String[] playerName, String[] playerType, String[] bowlerType) throws IOException{
         System.out.println("Enter the names of Bowlers now");
-        while(playerNumber<=11) {
-            System.out.println("Enter the Player " + playerNumber + " name");
-            playerName[playerNumber-1]=br.readLine();
+        while(playerNumber<11) {
+            System.out.println("Enter the Player " + (playerNumber+1) + " name");
+            playerName[playerNumber]=br.readLine();
             System.out.println("Enter the type of Bowler the player is :\n1. Fast \n2. Medium Fast \n3. Spin");
             String bowlerTypeChoice=br.readLine();
             while(invalidBowlerType(bowlerTypeChoice)){
                 System.out.println("Enter a valid number :\n1. Fast \n2. Medium Fast \n3. Spin");
                 bowlerTypeChoice=br.readLine();
             }
-            bowlerType[playerNumber-1]=bowlerTypeChoice;
-            playerType[playerNumber-1]= ""+2;
+            bowlerType[playerNumber]=bowlerTypeChoice;
+            playerType[playerNumber]= ""+2;
             playerNumber++;
         }
+    }
+
+    private int getPlayerNumber(String[] playerType){
+        int playerNumber=0;
+        for(int i=0; i<11; i++){
+            if(playerType[i]!=null){
+                playerNumber++;
+            }
+        }
+        return playerNumber;
     }
 
     private boolean invalidOvers(String checkOvers) {

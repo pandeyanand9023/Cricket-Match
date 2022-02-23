@@ -21,14 +21,14 @@ public class MatchUtil {
             int outcome1=random.nextInt(5,8);
             int outcome2=random.nextInt(5,8);
             if(isExtra(outcome1, outcome2)){
-                return 8;
+                return 8; // Extra
             }else{
                 if(outcome1==5) {
-                    return 0;
+                    return 0;   // Dot ball
                 }else if(outcome1==6){
                     return random.nextInt(1,7); // Runs from (1-6)
                 }else {
-                    return outcome1;
+                    return outcome1; // Wicket
                 }
 
             }

@@ -87,6 +87,7 @@ public class Player {
     public void setWayOfGettingOut(){
         this.wayOfGettingOut=WayOfGettingOut.getRandomWayOfGettingOut();
     }
+
     public BowlerType getBowlerType(){
         return this.bowlerType;
     }

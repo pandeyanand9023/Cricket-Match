@@ -32,9 +32,8 @@ Player:
 Player will be batsman or bowler or wicketkeeper along with his name, personalscore, personalBalls, etc. The methods of this class are mainly called from Teams class's object because every Player in this game belongs to a Team. The info of player gets updated when the team's updation takes place. 
 
 
-CountryName:
-CountryName is an enum which contains the names of the country.It also contains a random method which randommly allocates two teams for the match to take place.
-
-
 UtilClass:
 UtilClass contains method for validation. 
+
+DB;
+For storing and retrieving relevant information. 

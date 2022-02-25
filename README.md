@@ -38,5 +38,5 @@ Player will be batsman or bowler or wicketkeeper along with his name, personalsc
 UtilClass:
 UtilClass contains method for validation. 
 
-DB;
+DB:
 For storing and retrieving relevant information. 

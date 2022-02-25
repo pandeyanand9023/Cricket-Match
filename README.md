@@ -8,19 +8,17 @@ Main: It is the class from where the  program execution starts. It calls the Mat
 
 MatchController:
 MatchController takes necessary input from user like  numOfOvers, playerName, playerType, etc
-
 MatchController will create a new Match instance with constructor with these read args
 
 
 Match:
 Match is having fields like team1, team2, winner, totalAvailableBalls 
-
 when MatchController calls startMatch(), game will be started and 
 startInning() will be called and target will be taken into consideration for the chaser team
 
 Innings will have total overs given during construction. method' call returns back when 
 1. Either all over completes 
-2. 2. 10 Wickets are fallen
+2. 10 Wickets are fallen
 3. Target is reached.
 The strike will be changed on odd runs or over completion and
 winner will be declared based on the score of both teams

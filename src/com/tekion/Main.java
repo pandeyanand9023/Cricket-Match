@@ -1,10 +1,13 @@
 package com.tekion;
+import com.tekion.database.DB;
 import com.tekion.match.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
+
 public class Main {
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String activeMatch = "1";
         do {
@@ -18,18 +21,35 @@ public class Main {
 }
 
 /*
+Table Structure
 
-Minutes of the meeting (Monday):
-1. setPlayerDetails: Pass info to a void method and then setDetails there (Refactor) (Done)
-2. Put remainingRuns inside printChoices use and If there (Use loop or something to avoid numbering disturbance) (Done)
-3. Optimize the changeBowler (Make changeBowler pick in constant time and keep updating the list after each over)(Done)
-4. Toss should be done inside MatchController // No teams should be mentioned inside matchController
-5. Think of the condition about overs exhausted and make effective changes
+Match :  Primary Key: MatchId  (Integer)
+         Foreign Key :Team1_Id (Integer)
+         Foreign Key :Team2_Id (Integer)
+                      Results  (Varchar)
+
+Team :   Foreign Key: MatchId (Integer)
+         Foreign Key: Team_ID (Integer)
+                      Runs (Integer)
+                      OversPlayed (Float)
+                      WicketsTaken (Integer)
+
+Player: Primary Key:  PlayerId        (Integer)
+        Foreign Key:  Team_Id         (Integer)
+                      PlayerName      (Varchar)
+                      PlayerType      (Varchar)
+                      BowlingType     (Varchar)
 
 
-DataBase:
-1. Decide tables
-2. Models
-3. Relationship
+PlayerStats:  Foreign Key : MatchId         (Integer)
+              ForeignKey  : PlayerId        (Integer)
+                            IndividualScore (Integer)
+                            OversBowled     (Float)
+                            WicketsTaken    (Integer)
+                            BowlsPlayed     (Integer)
+
+Country: Primary Key:  CountryId  (Integer)
+                       CountryName (Varchar)
+
 
  */

@@ -1,7 +1,10 @@
 package com.tekion.match;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 public class MatchUtil {
+    public static BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
     private static final int extraBall=7;
     private static  Random random=new Random();
     public static boolean validateInputs(String value, ArrayList<String> allowedValue){
@@ -71,7 +74,95 @@ public class MatchUtil {
         }
     }
 
+
+    public static void setBatsmanDetails(int playerNumber, String[] playerName, String[] playerType, String[] bowlerType) throws IOException{
+        System.out.println("Enter the number of Batsman ? (Max 6)");
+        String numberOfBatsman=br.readLine();
+        while(invalidNumberOfBatsman(numberOfBatsman)){
+            System.out.println("Enter valid number of Batsman (Between 1-6)");
+            numberOfBatsman=br.readLine();
+        }
+        for( playerNumber=1; playerNumber<=Integer.parseInt(numberOfBatsman); playerNumber++) {
+            System.out.println("Enter the Player " + playerNumber + " name");
+            playerName[playerNumber-1]=br.readLine();
+            System.out.println("Enter the type of Bowler the player is :\n1. Fast \n2. Medium Fast \n3. Spin");
+            String bowlerTypeChoice=br.readLine();
+            while(invalidBowlerType(bowlerTypeChoice)){
+                System.out.println("Enter a valid number :\n1. Fast \n2. Medium Fast \n3. Spin");
+                bowlerTypeChoice=br.readLine();
+            }
+            bowlerType[playerNumber-1]=bowlerTypeChoice;
+            playerType[playerNumber-1]= ""+1;
+        }
+    }
+
+    public static void setAllRounderDetails(int playerNumber, String[] playerName, String[] playerType, String[] bowlerType) throws IOException{
+        System.out.println("Enter the number of All-rounders ? (Max 2)");
+        String numberOfAllRounders=br.readLine();
+        while(invalidNumberOfAllrounders(numberOfAllRounders)){
+            System.out.println("Enter valid number of All-rounders");
+            numberOfAllRounders=br.readLine();
+        }
+        int numberOfAllrounder=0;
+        while(numberOfAllrounder<Integer.parseInt(numberOfAllRounders)){
+            System.out.println("Enter the Player " + (playerNumber+1) + " name");
+            playerName[playerNumber]=br.readLine();
+            System.out.println("Enter the type of Bowler the player is :\n1. Fast \n2. Medium Fast \n3. Spin");
+            String bowlerTypeChoice=br.readLine();
+            while(invalidBowlerType(bowlerTypeChoice)){
+                System.out.println("Enter a valid number :\n1. Fast \n2. Medium Fast \n3. Spin");
+                bowlerTypeChoice=br.readLine();
+            }
+            bowlerType[playerNumber]=bowlerTypeChoice;
+            playerType[playerNumber]= ""+3;
+            playerNumber++;
+            numberOfAllrounder++;
+        }
+    }
+
+    public static void setBowlerDetails(int playerNumber, String[] playerName, String[] playerType, String[] bowlerType) throws IOException{
+        System.out.println("Enter the names of Bowlers now");
+        while(playerNumber<11) {
+            System.out.println("Enter the Player " + (playerNumber+1) + " name");
+            playerName[playerNumber]=br.readLine();
+            System.out.println("Enter the type of Bowler the player is :\n1. Fast \n2. Medium Fast \n3. Spin");
+            String bowlerTypeChoice=br.readLine();
+            while(invalidBowlerType(bowlerTypeChoice)){
+                System.out.println("Enter a valid number :\n1. Fast \n2. Medium Fast \n3. Spin");
+                bowlerTypeChoice=br.readLine();
+            }
+            bowlerType[playerNumber]=bowlerTypeChoice;
+            playerType[playerNumber]= ""+2;
+            playerNumber++;
+        }
+    }
+
     public static void clearConsole() throws IOException{
         System.out.println("Not working!!");
+    }
+
+
+    private static boolean invalidNumberOfAllrounders(String numberOfAllRounders){
+        ArrayList<String> allowedNumberOfAllRounders=new ArrayList<>();
+        for(int i=0; i<=2; i++){
+            allowedNumberOfAllRounders.add(""+i);
+        }
+        return !(MatchUtil.validateInputs(numberOfAllRounders, allowedNumberOfAllRounders));
+    }
+
+    private static boolean invalidNumberOfBatsman(String numberOfBatsman){
+        ArrayList<String> allowedNumberOfBatsman=new ArrayList<>();
+        for(int i=1; i<=6; i++){
+            allowedNumberOfBatsman.add(""+i);
+        }
+        return !(MatchUtil.validateInputs(numberOfBatsman, allowedNumberOfBatsman));
+    }
+
+    private static boolean invalidBowlerType(String bowlerTypes){
+        ArrayList<String> allowedNumberOfBowlerTypes=new ArrayList<>();
+        for(int i=1; i<=3; i++){
+            allowedNumberOfBowlerTypes.add(""+i);
+        }
+        return !(MatchUtil.validateInputs(bowlerTypes, allowedNumberOfBowlerTypes));
     }
 }

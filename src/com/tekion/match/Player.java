@@ -29,6 +29,7 @@ public class Player {
     private Role playerType;
     private WayOfGettingOut wayOfGettingOut;
     private BowlerType bowlerType;
+    private int playerId;
     private int runsScored;
     private int bowlsPlayed;
     private int bowlsBowled;

@@ -5,6 +5,7 @@ import java.util.ArrayDeque;
 import java.util.Random;
 
 public class Match {
+    private int matchId;
     private final Team team1;
     private final Team team2;
     private int overs;
@@ -12,8 +13,8 @@ public class Match {
     private BufferedReader br;
     private ArrayDeque<String> lastSixBalls;
 
-    Match(CountryName teamOne, String[] teamOnePlayerName, String[] teamOnePlayerType, String[] teamOneBowlerType,
-          CountryName teamTwo, String[] teamTwoPlayerName, String[] teamTwoPlayerType, String[] teamTwoBowlerType,
+    Match(String teamOne, String[] teamOnePlayerName, String[] teamOnePlayerType, String[] teamOneBowlerType,
+          String teamTwo, String[] teamTwoPlayerName, String[] teamTwoPlayerType, String[] teamTwoBowlerType,
           int overs, BufferedReader br) throws IOException {
         team1 = new Team(br, teamOne, teamOnePlayerName, teamOnePlayerType, teamOneBowlerType, overs);
         team2 = new Team(br, teamTwo, teamTwoPlayerName, teamTwoPlayerType, teamTwoBowlerType, overs);
@@ -153,7 +154,7 @@ public class Match {
             case "8":
                 showScoreboard(battingTeam);
                 break;
-            case "9":
+            case "10":
                 showRemainingRuns(battingTeam.getScore(), target);
             default:
                 System.out.println("\nIncoming next ball");
@@ -178,7 +179,6 @@ public class Match {
     }
 
     private void printChoices(int inningsNumber) {
-        if (inningsNumber == 0) {
             System.out.println("Before playing the next ball, would you like to see?" +
                     "\n1. Your Score" +
                     "\n2. Balls left in the over " +
@@ -189,20 +189,10 @@ public class Match {
                     "\n7. Want to see the previous six balls ?" +
                     "\n8. Show scorecard" +
                     "\n9. Press any key to skip this and play next ball");
-        } else {
-            System.out.println("Before playing the next ball, would you like to see?" +
-                    "\n1. Your Score" +
-                    "\n2. Balls left in the over " +
-                    "\n3. Teams Score " +
-                    "\n4. Wickets remaining " +
-                    "\n5. Overs left in the innings" +
-                    "\n6. Fall of Wicket " +
-                    "\n7. Want to see the previous six balls ?" +
-                    "\n8. Show scorecard" +
-                    "\n9. Remaining runs to win the match" +
-                    "\n10. Press any key to skip this and play next ball");
+            if(inningsNumber==1) {
+                System.out.println("10. Remaining runs to win the match");
+            }
         }
-    }
 
     private boolean isAWide() {
         Random random = new Random();

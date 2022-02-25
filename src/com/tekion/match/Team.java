@@ -10,9 +10,10 @@ import static com.tekion.match.Player.*;
 public class Team {
     private BufferedReader br;
     private static final int teamSize=11;
+    private int teamId;
     private int score;
     private int wicketsFallen;
-    private CountryName name;
+    private String name;
     private ArrayList<Player> squad;
     private int previousBowler;
     private HashMap<Integer, String> availableBowlers;
@@ -22,7 +23,7 @@ public class Team {
     private int nonStrike=1;
     private int currentBowler=10;
 
-    Team(BufferedReader br, CountryName name, String[] playerName, String[] playerType, String[] bowlerType,  int overs)throws IOException {
+    Team(BufferedReader br, String name, String[] playerName, String[] playerType, String[] bowlerType,  int overs)throws IOException {
         this.br=br;
         this.name=name;
         scoresAtFallOfWicket =new int[10];
@@ -72,7 +73,7 @@ public class Team {
         squad.get(currentBowler).addWicket();
     }
 
-    public CountryName getName(){
+    public String getName(){
         return this.name;
     }
 

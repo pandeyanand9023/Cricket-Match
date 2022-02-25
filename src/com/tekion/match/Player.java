@@ -1,33 +1,112 @@
 package com.tekion.match;
-import java.util.*;
+
+import java.util.Random;
+
 public class Player {
+     enum Role{
+     BATSMAN,
+     BOWLER,
+     ALL_ROUNDER;
+    };
+    enum BowlerType{
+     FAST,
+     MEDIUM_FAST,
+     SPIN;
+    };
+    enum WayOfGettingOut{
+        BOWLED,
+        CAUGHT,
+        RUN_OUT,
+        HIT_WICKET,
+        STUMPED;
+         public static WayOfGettingOut getRandomWayOfGettingOut() {
+            Random random = new Random();
+            return values()[random.nextInt(values().length)];
+        }
+    };
+
     private String name;
+    private Role playerType;
+    private WayOfGettingOut wayOfGettingOut;
+    private BowlerType bowlerType;
+    private int runsScored;
+    private int bowlsPlayed;
+    private int bowlsBowled;
+    private int numberOfWickets;
+    private int overs;
+    private boolean batsmanOut;
 
-    ENUM
+    Player(Role playerType, String name, BowlerType bowlerType) {
+        this.playerType=playerType;
+        this.bowlerType=bowlerType;
+        this.name=name;
+        this.runsScored=0;
+        this.bowlsPlayed=0;
+        this.bowlsBowled=0;
+        this.numberOfWickets=0;
+        this.overs=0;
+        this.batsmanOut=false;
+    }
 
-
-    public void setName(String name){
-     this.name=name;
-    }
-    public void setTeam(String team){
-        this.team=team;
-    }
-    public void setBatsman(){
-        this.Batsman=true;
-    }
-    public void setBowler(){
-       this.Bowler=true;
-    }
     public String getName() {
         return name;
     }
-    public String getTeam() {
-        return team;
+
+    public Role getPlayerType() {
+      return this.playerType;
     }
-    public boolean isBatsman() {
-       return Batsman;
+
+    public int getRunsScored(){
+        return this.runsScored;
     }
-    public boolean isBowler(){
-        return Bowler;
+
+    public void incrementRuns(int runs) {
+        this.runsScored+=runs;
     }
+
+    public void incrementBallsPlayed() {
+        this.bowlsPlayed++;
+    }
+
+    public void addWicket(){
+        this.numberOfWickets++;
+    }
+
+    public int getBowlsPlayed(){
+        return bowlsPlayed;
+    }
+
+    public int getNumberOfWickets(){
+        return this.numberOfWickets;
+    }
+
+    public void incrementOversBowled() {
+        this.overs++;
+    }
+
+    public void setWayOfGettingOut(){
+        this.wayOfGettingOut=WayOfGettingOut.getRandomWayOfGettingOut();
+    }
+
+    public BowlerType getBowlerType(){
+        return this.bowlerType;
+    }
+
+    public void setBatsmanOut(){
+        batsmanOut=true;
+        setWayOfGettingOut();
+    }
+
+    public void incrementBallsBowled() {
+        this.bowlsBowled++;
+        if(bowlsBowled==6) {
+            this.bowlsBowled=0;
+            incrementOversBowled();
+        }
+    }
+
+    public int getOversBowled(){
+        return overs;
+    }
+
 }

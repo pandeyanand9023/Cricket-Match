@@ -1,8 +1,13 @@
 package com.tekion.match;
+import static com.tekion.repository.Match.storeMatchResults;
+import static com.tekion.repository.PlayerDetails.insertTeamData;
+import static com.tekion.repository.Team.insertTeamsStats;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.Random;
+
 
 public class Match {
     private int matchId;
@@ -13,18 +18,25 @@ public class Match {
     private BufferedReader br;
     private ArrayDeque<String> lastSixBalls;
 
-    Match(String teamOne, String[] teamOnePlayerName, String[] teamOnePlayerType, String[] teamOneBowlerType,
-          String teamTwo, String[] teamTwoPlayerName, String[] teamTwoPlayerType, String[] teamTwoBowlerType,
-          int overs, BufferedReader br) throws IOException {
-        team1 = new Team(br, teamOne, teamOnePlayerName, teamOnePlayerType, teamOneBowlerType, overs);
-        team2 = new Team(br, teamTwo, teamTwoPlayerName, teamTwoPlayerType, teamTwoBowlerType, overs);
+    Match(int teamOneId, String teamOneName, String[] teamOnePlayerName, String[] teamOnePlayerType, String[] teamOneBowlerType,
+          int teamTwoId, String teamTwoName, String[] teamTwoPlayerName, String[] teamTwoPlayerType, String[] teamTwoBowlerType,
+          int overs, BufferedReader br) throws IOException, SQLException, ClassNotFoundException {
+        team1 = new Team(br, teamOneId, teamOneName, teamOnePlayerName, teamOnePlayerType, teamOneBowlerType, overs);
+        team2 = new Team(br, teamTwoId, teamTwoName, teamTwoPlayerName, teamTwoPlayerType, teamTwoBowlerType, overs);
+        this.matchId=MatchUtil.getMatchId();
         this.overs = overs;
         this.br = br;
         inningsNumber = 0;
         this.lastSixBalls = new ArrayDeque<>();
+        insertTeamData(team1);
+        insertTeamData(team2);
     }
 
-    public void playMatch() throws IOException, InterruptedException {
+    public int getMatchId(){
+        return matchId;
+    }
+
+    public void playMatch() throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         int tossOutcome = MatchUtil.simulateToss(team1, team2);
         if (tossOutcome == 0) {
             startInnings(team1, team2, Integer.MAX_VALUE);
@@ -39,6 +51,7 @@ public class Match {
             startInnings(team1, team2, team2.getScore());
             System.out.println("Second Innings Over");
         }
+        insertTeamsStats(matchId, team1, team2);
         showFinalScoreboard(team1, team2);
         team1.topPerformers();
         team2.topPerformers();
@@ -113,13 +126,19 @@ public class Match {
         battingTeam.setStrike();
     }
 
-    private void declareWinner() {
+    private void declareWinner() throws SQLException, ClassNotFoundException {
         if (team1.getScore() > team2.getScore()) {
-            System.out.println(team1.getName() + " won the match !!");
+            String result=team1.getName() + " won the match !!";
+            storeMatchResults(matchId, team1.getTeamId(), team2.getTeamId(), result);
+            System.out.println(result);
         } else if (team1.getScore() < team2.getScore()) {
-            System.out.println(team2.getName() + " won the match !!");
+            String result=team2.getName() + " won the match !!";
+            storeMatchResults(matchId, team1.getTeamId(), team2.getTeamId(), result);
+            System.out.println(result);
         } else {
-            System.out.println("It's a tie!!!");
+            String result="It's a tie!!!";
+            storeMatchResults(matchId, team1.getTeamId(), team2.getTeamId(), result);
+            System.out.println(result);
         }
     }
 

@@ -1,5 +1,4 @@
 package com.tekion;
-import com.tekion.database.DB;
 import com.tekion.match.*;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,33 +22,45 @@ public class Main {
 /*
 Table Structure
 
+(Filled at the end of the match)
 Match :  Primary Key: MatchId  (Integer)
          Foreign Key :Team1_Id (Integer)
          Foreign Key :Team2_Id (Integer)
                       Results  (Varchar)
 
-Team :   Foreign Key: MatchId (Integer)
-         Foreign Key: Team_ID (Integer)
+(Filled the end only before filling match)
+Team :                MatchId (Integer)        Primary Key : (MatchId+TeamId)
+                      TeamID (Integer)
                       Runs (Integer)
-                      OversPlayed (Float)
                       WicketsTaken (Integer)
 
-Player: Primary Key:  PlayerId        (Integer)
-        Foreign Key:  Team_Id         (Integer)
-                      PlayerName      (Varchar)
-                      PlayerType      (Varchar)
-                      BowlingType     (Varchar)
+(Fill at the start) (Done and working fine)
+PlayerDetails: Primary Key:  PlayerId        (Integer)   (Primary Key: PlayerID+TeamID)
+                             TeamId          (Integer)
+                             PlayerName      (Varchar)
+                             PlayerType      (Varchar)
+                             BowlingType     (Varchar)
 
 
-PlayerStats:  Foreign Key : MatchId         (Integer)
+(Filled at the end)
+Player:       Foreign Key : MatchId         (Integer)    (MatchId+PlayerId+TeamId) Primary Key
               ForeignKey  : PlayerId        (Integer)
+                            TeamId          (Integer)
                             IndividualScore (Integer)
                             OversBowled     (Float)
                             WicketsTaken    (Integer)
-                            BowlsPlayed     (Integer)
 
+
+// Update your batsman probability of getting out
+
+(Pre filled, used only for getting two random teams out of it) (Done and Working fine)
 Country: Primary Key:  CountryId  (Integer)
                        CountryName (Varchar)
-
-
+*/
+/*
+1. Search Caching (Basic): Types of caching
+                         1. Centralized
+                         2. Local
  */
+
+

@@ -29,7 +29,6 @@ public class Player {
     private Role playerType;
     private WayOfGettingOut wayOfGettingOut;
     private BowlerType bowlerType;
-    private int playerId;
     private int runsScored;
     private int bowlsPlayed;
     private int bowlsBowled;
@@ -91,6 +90,10 @@ public class Player {
 
     public BowlerType getBowlerType(){
         return this.bowlerType;
+    }
+
+    public int getBowlsBowled(){
+        return bowlsBowled;
     }
 
     public void setBatsmanOut(){

@@ -1,10 +1,13 @@
 package com.tekion.match;
-import com.tekion.database.DB;
 
 import java.sql.SQLException;
 import java.util.*;
 import java.io.BufferedReader;
 import java.io.IOException;
+
+import static com.tekion.repository.Match.getTeamName;
+import static com.tekion.repository.Match.selectTeams;
+
 public class MatchController extends Exception{
     BufferedReader br;
     Match match;
@@ -13,15 +16,15 @@ public class MatchController extends Exception{
         match = initializeMatch();
     }
 
-    public void startMatch() throws IOException, InterruptedException {
+    public void startMatch() throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         match.playMatch();
     }
 
     public Match initializeMatch() throws IOException, SQLException, ClassNotFoundException {
-        ArrayList<Integer> teamIds= (ArrayList<Integer>) DB.selectTeams();
+        ArrayList<Integer> teamIds= (ArrayList<Integer>) selectTeams();
         int teamOneId=teamIds.get(0);
         int teamTwoId=teamIds.get(1);
-        System.out.println("Welcome to today's match!!\n"+ DB.getTeamName().get(0)+" vs "+ DB.getTeamName().get(1));
+        System.out.println("Welcome to today's match!!\n"+ getTeamName().get(0)+" vs "+ getTeamName().get(1));
         System.out.println("Select the number of overs ?\n10 Overs \n20 Overs \n50 Overs");
         String checkOvers=br.readLine();
         while(invalidOvers(checkOvers)){
@@ -32,13 +35,13 @@ public class MatchController extends Exception{
         String[] teamOnePlayerName=new String[11];
         String[] teamOnePlayerType=new String[11];
         String[] teamOneBowlerType=new String[11];
-        setPlayerDetails(DB.getTeamName().get(0), teamOnePlayerName, teamOnePlayerType, teamOneBowlerType);
+        setPlayerDetails(getTeamName().get(0), teamOnePlayerName, teamOnePlayerType, teamOneBowlerType);
         String[] teamTwoPlayerName=new String[11];
         String[] teamTwoPlayerType=new String[11];
         String[] teamTwoBowlerType=new String[11];
-        setPlayerDetails(DB.getTeamName().get(1), teamTwoPlayerName, teamTwoPlayerType, teamTwoBowlerType);
-        Match match=new Match(DB.getTeamName().get(0), teamOnePlayerName, teamOnePlayerType, teamOneBowlerType,
-                              DB.getTeamName().get(1), teamTwoPlayerName, teamTwoPlayerType, teamTwoBowlerType,
+        setPlayerDetails(getTeamName().get(1), teamTwoPlayerName, teamTwoPlayerType, teamTwoBowlerType);
+        Match match=new Match(teamOneId,  getTeamName().get(0), teamOnePlayerName, teamOnePlayerType, teamOneBowlerType,
+                              teamTwoId,  getTeamName().get(1), teamTwoPlayerName, teamTwoPlayerType, teamTwoBowlerType,
                               overs, br);
         return match;
     }

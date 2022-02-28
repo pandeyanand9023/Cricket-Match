@@ -23,17 +23,18 @@ public class Team {
     private int nonStrike=1;
     private int currentBowler=10;
 
-    Team(BufferedReader br, String name, String[] playerName, String[] playerType, String[] bowlerType,  int overs)throws IOException {
+    Team(BufferedReader br, int teamId, String name, String[] playerName, String[] playerType, String[] bowlerType, int overs)throws IOException {
         this.br=br;
         this.name=name;
+        this.teamId=teamId;
         scoresAtFallOfWicket =new int[10];
         Arrays.fill(scoresAtFallOfWicket,-1);
         squad =new ArrayList<Player>();
         maxOversAllowed =overs/5;
         availableBowlers=new HashMap<>();
-        setAvailableBowlers();
         previousBowler=-1;
         setTeams(playerName, playerType, bowlerType);
+        setAvailableBowlers();
     }
 
     public void getScoresAtFallOfWicket(){
@@ -121,6 +122,10 @@ public class Team {
         nonStrike=temp;
     }
 
+    public int getTeamId(){
+        return teamId;
+    }
+
     public int getMaxOversAllowed(){
         return maxOversAllowed;
     }
@@ -140,6 +145,7 @@ public class Team {
             System.out.println("Select a valid choice from the above list");
             nextBowler= br.readLine();
         }
+           previousBowler=currentBowler;
            currentBowler=Integer.parseInt(nextBowler);
     }
     private Player.BowlerType  setBowlerType(String bowlerType){
@@ -151,7 +157,6 @@ public class Team {
             return BowlerType.SPIN;
         }
     }
-
 
     public int getStrike(){
         return strike;
@@ -172,8 +177,8 @@ public class Team {
             System.out.println("Runs Scored : "+squad.get(i).getRunsScored());
             System.out.println("Balls Played : "+squad.get(i).getBowlsPlayed());
             System.out.print("Overs Bowled: "+squad.get(i).getOversBowled());
-            if(squad.get(i).getOversBowled()!=0) {
-                System.out.println("."+squad.get(i).getOversBowled());
+            if(squad.get(i).getBowlsBowled()!=0) {
+                System.out.println("."+squad.get(i).getBowlsBowled());
             } else {
                 System.out.println();
             }
@@ -185,9 +190,9 @@ public class Team {
     @Override
     public String toString() {
         return "Team{" +
-                ", score=" + score +
+                " score=" + score +
                 ", wicketsFallen=" + wicketsFallen +
-                ", name=" + name +
+                ", Batting Team=" + name +
                 ", maxOversAllowed=" + maxOversAllowed +
                 ", strike=" + strike +
                 ", nonStrike=" + nonStrike +
@@ -243,6 +248,4 @@ public class Team {
         }
         return !(MatchUtil.validateInputs(bowlerNumber, allowedValues));
     }
-
-
 }

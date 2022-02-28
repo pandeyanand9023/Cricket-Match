@@ -56,12 +56,6 @@ public class MatchUtil {
             return choiceToBatOrBall(team2)^tossOutcome;
         }
     }
-    /*
-    0 0 => team1, team2
-    0,1=>  team2, team1
-    1,0 => team2, team1
-    1,1 => team1, team2
-    */
 
     public static int choiceToBatOrBall(Team team){
         int batOrBall=random.nextInt(2);
@@ -73,7 +67,6 @@ public class MatchUtil {
            return 1;
         }
     }
-
 
     public static void setBatsmanDetails(int playerNumber, String[] playerName, String[] playerType, String[] bowlerType) throws IOException{
         System.out.println("Enter the number of Batsman ? (Max 6)");
@@ -141,6 +134,9 @@ public class MatchUtil {
         System.out.println("Not working!!");
     }
 
+    public static int getMatchId(){
+        return random.nextInt((int)Math.pow(2,30));
+    }
 
     private static boolean invalidNumberOfAllrounders(String numberOfAllRounders){
         ArrayList<String> allowedNumberOfAllRounders=new ArrayList<>();

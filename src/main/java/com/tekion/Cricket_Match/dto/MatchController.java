@@ -1,20 +1,30 @@
 package com.tekion.Cricket_Match.dto;
 
+import com.tekion.Cricket_Match.repository.MatchRepository;
+import com.tekion.Cricket_Match.repository.PlayerDetailsRepository;
+import com.tekion.Cricket_Match.repository.TeamRepository;
 import com.tekion.Cricket_Match.utils.MatchUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import static com.tekion.Cricket_Match.repository.MatchRepository.getTeamName;
-import static com.tekion.Cricket_Match.repository.MatchRepository.selectTeams;
+import static com.tekion.Cricket_Match.repository.MatchRepositoryImpl.getTeamName;
 
 public class MatchController extends Exception{
     BufferedReader br;
     Match match;
-    public MatchController(BufferedReader br) throws IOException, SQLException, ClassNotFoundException {
+    MatchRepository matchRepository;
+    TeamRepository teamRepository;
+    PlayerDetailsRepository playerDetailsRepository;
+
+    @Autowired
+    public MatchController(BufferedReader br, MatchRepository matchRepository, TeamRepository teamRepository, PlayerDetailsRepository playerDetailsRepository) throws IOException, SQLException, ClassNotFoundException {
         this.br=br;
+        this.matchRepository=matchRepository;
+        this.teamRepository=teamRepository;
+        this.playerDetailsRepository=playerDetailsRepository;
         match = initializeMatch();
     }
 
@@ -23,7 +33,7 @@ public class MatchController extends Exception{
     }
 
     public Match initializeMatch() throws IOException, SQLException, ClassNotFoundException {
-        ArrayList<Integer> teamIds= (ArrayList<Integer>) selectTeams();
+        ArrayList<Integer> teamIds= (ArrayList<Integer>) matchRepository.selectTeams();
         int teamOneId=teamIds.get(0);
         int teamTwoId=teamIds.get(1);
         System.out.println("Welcome to today's match!!\n"+ getTeamName().get(0)+" vs "+ getTeamName().get(1));
@@ -44,7 +54,7 @@ public class MatchController extends Exception{
         setPlayerDetails(getTeamName().get(1), teamTwoPlayerName, teamTwoPlayerType, teamTwoBowlerType);
         Match match=new Match(teamOneId,  getTeamName().get(0), teamOnePlayerName, teamOnePlayerType, teamOneBowlerType,
                               teamTwoId,  getTeamName().get(1), teamTwoPlayerName, teamTwoPlayerType, teamTwoBowlerType,
-                              overs, br);
+                              overs, br, matchRepository, teamRepository, playerDetailsRepository);
         return match;
     }
 

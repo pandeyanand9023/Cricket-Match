@@ -1,6 +1,7 @@
 package com.tekion.Cricket_Match.utils;
 import com.tekion.Cricket_Match.dto.Team;
 import com.tekion.Cricket_Match.dto.Player;
+import com.tekion.Cricket_Match.enums.PlayerType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,8 +17,8 @@ public class MatchUtil {
         return allowedValue.contains(value);
     }
 
-    public static int getRandomOutcome(Player.Role playerType){
-        if(playerType== Player.Role.BATSMAN || playerType== Player.Role.ALL_ROUNDER){
+    public static int getRandomOutcome(PlayerType playerType){
+        if(playerType== playerType.BATSMAN || playerType== playerType.ALL_ROUNDER){
            int outcome1=(int)(Math.random()*7);
            int outcome2=(int)(Math.random()*7);
            if(isExtra(outcome1, outcome2)) {
@@ -133,10 +134,6 @@ public class MatchUtil {
             playerType[playerNumber]= ""+2;
             playerNumber++;
         }
-    }
-
-    public static void clearConsole() throws IOException{
-        System.out.println("Not working!!");
     }
 
     public static int getMatchId(){

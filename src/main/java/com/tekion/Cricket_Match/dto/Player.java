@@ -1,32 +1,10 @@
 package com.tekion.Cricket_Match.dto;
 
-import java.util.Random;
+import com.tekion.Cricket_Match.enums.*;
 
 public class Player {
-     public enum Role{
-     BATSMAN,
-     BOWLER,
-     ALL_ROUNDER;
-    };
-    enum BowlerType{
-     FAST,
-     MEDIUM_FAST,
-     SPIN;
-    };
-    enum WayOfGettingOut{
-        BOWLED,
-        CAUGHT,
-        RUN_OUT,
-        HIT_WICKET,
-        STUMPED;
-         public static WayOfGettingOut getRandomWayOfGettingOut() {
-            Random random = new Random();
-            return values()[random.nextInt(values().length)];
-        }
-    };
-
     private String name;
-    private Role playerType;
+    private PlayerType playerType;
     private WayOfGettingOut wayOfGettingOut;
     private BowlerType bowlerType;
     private int runsScored;
@@ -36,7 +14,7 @@ public class Player {
     private int overs;
     private boolean batsmanOut;
 
-    Player(Role playerType, String name, BowlerType bowlerType) {
+    Player(PlayerType playerType, String name, BowlerType bowlerType) {
         this.playerType=playerType;
         this.bowlerType=bowlerType;
         this.name=name;
@@ -52,7 +30,7 @@ public class Player {
         return name;
     }
 
-    public Role getPlayerType() {
+    public PlayerType getPlayerType() {
       return this.playerType;
     }
 

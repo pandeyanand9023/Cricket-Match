@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import com.tekion.Cricket_Match.enums.*;
 import com.tekion.Cricket_Match.utils.*;
 import static com.tekion.Cricket_Match.dto.Player.*;
 public class Team {
@@ -52,7 +53,8 @@ public class Team {
         int maxWicket=0;
         int highestScorer=0;
         int highestWicketTaker=0;
-        for(int i=0;i<11;i++){
+
+        for(int i=0;i<teamSize;i++){
             if(squad.get(i).getRunsScored()>maxScore){
                 maxScore=squad.get(i).getRunsScored();
                 highestScorer=i;
@@ -148,7 +150,7 @@ public class Team {
            previousBowler=currentBowler;
            currentBowler=Integer.parseInt(nextBowler);
     }
-    private Player.BowlerType  setBowlerType(String bowlerType){
+    private BowlerType setBowlerType(String bowlerType){
         if(bowlerType.equals("1")){
             return BowlerType.FAST;
         } else if(bowlerType.equals("2")){
@@ -211,11 +213,11 @@ public class Team {
         for(int i=0; i<teamSize; i++) {
             Player newPlayer;
             if (playerType[i].equals("1")) {
-                newPlayer = new Player(Role.BATSMAN, playerName[i], setBowlerType(bowlerType[i]));
+                newPlayer = new Player(PlayerType.BATSMAN, playerName[i], setBowlerType(bowlerType[i]));
             } else if(playerType[i].equals("2")) {
-                newPlayer = new Player(Role.BOWLER, playerName[i], setBowlerType(bowlerType[i]));
+                newPlayer = new Player(PlayerType.BOWLER, playerName[i], setBowlerType(bowlerType[i]));
             } else {
-                newPlayer =new Player(Role.ALL_ROUNDER, playerName[i], setBowlerType(bowlerType[i]));
+                newPlayer =new Player(PlayerType.ALL_ROUNDER, playerName[i], setBowlerType(bowlerType[i]));
             }
             squad.add(newPlayer);
         }

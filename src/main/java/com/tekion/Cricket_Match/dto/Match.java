@@ -1,15 +1,15 @@
 package com.tekion.Cricket_Match.dto;
+import com.tekion.Cricket_Match.repository.MatchRepository;
+import com.tekion.Cricket_Match.repository.PlayerDetailsRepository;
+import com.tekion.Cricket_Match.repository.TeamRepository;
 import com.tekion.Cricket_Match.utils.MatchUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.Random;
-
-import static com.tekion.Cricket_Match.repository.MatchRepository.storeMatchResults;
-import static com.tekion.Cricket_Match.repository.PlayerDetailsRepository.insertTeamData;
-import static com.tekion.Cricket_Match.repository.TeamRepository.insertTeamsStats;
-
 
 public class Match {
     private int matchId;
@@ -19,10 +19,14 @@ public class Match {
     private int inningsNumber;
     private BufferedReader br;
     private ArrayDeque<String> lastSixBalls;
+    MatchRepository matchRepository;
+    PlayerDetailsRepository playerDetailsRepository;
+    TeamRepository teamRepository;
 
+    @Autowired
     Match(int teamOneId, String teamOneName, String[] teamOnePlayerName, String[] teamOnePlayerType, String[] teamOneBowlerType,
           int teamTwoId, String teamTwoName, String[] teamTwoPlayerName, String[] teamTwoPlayerType, String[] teamTwoBowlerType,
-          int overs, BufferedReader br) throws IOException, SQLException, ClassNotFoundException {
+          int overs, BufferedReader br,MatchRepository matchRepository, TeamRepository teamRepository, PlayerDetailsRepository playerDetailsRepository) throws IOException, SQLException, ClassNotFoundException {
         team1 = new Team(br, teamOneId, teamOneName, teamOnePlayerName, teamOnePlayerType, teamOneBowlerType, overs);
         team2 = new Team(br, teamTwoId, teamTwoName, teamTwoPlayerName, teamTwoPlayerType, teamTwoBowlerType, overs);
         this.matchId= MatchUtil.getMatchId();
@@ -30,8 +34,11 @@ public class Match {
         this.br = br;
         inningsNumber = 0;
         this.lastSixBalls = new ArrayDeque<>();
-        insertTeamData(team1);
-        insertTeamData(team2);
+        this.matchRepository=matchRepository;
+        this.teamRepository=teamRepository;
+        this.playerDetailsRepository=playerDetailsRepository;
+        playerDetailsRepository.insertTeamData(team1);
+        playerDetailsRepository.insertTeamData(team2);
     }
 
     public int getMatchId(){
@@ -53,7 +60,7 @@ public class Match {
             startInnings(team1, team2, team2.getScore());
             System.out.println("Second Innings Over");
         }
-        insertTeamsStats(matchId, team1, team2);
+        teamRepository.insertTeamsStats(matchId, team1, team2);
         showFinalScoreboard(team1, team2);
         team1.topPerformers();
         team2.topPerformers();
@@ -63,7 +70,6 @@ public class Match {
     public void startInnings(Team battingTeam, Team bowlingTeam, int target) throws IOException, InterruptedException {
         int currOvers = 1;
         while (currOvers <= overs) {
-            MatchUtil.clearConsole();
             if (battingTeam.getScore() > target) {
                 return;
             }
@@ -131,15 +137,15 @@ public class Match {
     public void declareWinner() throws SQLException, ClassNotFoundException {
         if (team1.getScore() > team2.getScore()) {
             String result=team1.getName() + " won the match !!";
-            storeMatchResults(matchId, team1.getTeamId(), team2.getTeamId(), result);
+            matchRepository.storeMatchResults(matchId, team1.getTeamId(), team2.getTeamId(), result);
             System.out.println(result);
         } else if (team1.getScore() < team2.getScore()) {
             String result=team2.getName() + " won the match !!";
-            storeMatchResults(matchId, team1.getTeamId(), team2.getTeamId(), result);
+            matchRepository.storeMatchResults(matchId, team1.getTeamId(), team2.getTeamId(), result);
             System.out.println(result);
         } else {
             String result="It's a tie!!!";
-            storeMatchResults(matchId, team1.getTeamId(), team2.getTeamId(), result);
+            matchRepository.storeMatchResults(matchId, team1.getTeamId(), team2.getTeamId(), result);
             System.out.println(result);
         }
     }

@@ -11,12 +11,11 @@ public class CricketMatchApplication {
 	}
 
 }
+
 /*
+1. Read about component ()
+2. How do Spring knows about which bean to create if we use annotations (@Service, @repository, @component) ()
+3. Read about @Data Annotation(Lombok Library) (Done)
+4. Daily Updates on Reading Material (HeadFirst and Effective Java) 11 AM
+*/
 
-See into DB's:
-
-Movie ticket booking
-Card Game
-Chess Games
-
- */
